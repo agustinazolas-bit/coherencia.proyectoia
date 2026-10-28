@@ -1,0 +1,205 @@
+/*
+Theme Name: COHERENCIA - El Auditor
+Theme URI: https://coherencia.cl
+Author: COHERENCIA Observatorio
+Author URI: https://coherencia.cl
+Description: Tema y sistema híbrido de auditoría gubernamental automatizada y fact-checking con IA (EL AUDITOR). Compatible con Gutenberg (Block Editor), Full Site Editing (theme.json), constructores visuales (Elementor, Divi, Astra, GeneratePress, Kadence) y shortcode universal [coherencia_auditor]. Incluye análisis en 3 capas, Google Search Grounding, matriz de 14 compromisos de los primeros 100 días (11 mar - 19 jun 2026) y reportajes en video reales.
+Version: 2.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: coherencia
+Tags: government, audit, fact-checking, block-styles, wide-blocks, custom-logo, custom-menu, featured-images, custom-colors, editor-style, theme-options, translation-ready
+*/
+
+:root {
+  --coherencia-brand: #10b981;
+  --coherencia-brand-hover: #059669;
+  --coherencia-bg-dark: #0f172a;
+  --coherencia-bg-card: rgba(30, 41, 59, 0.75);
+  --coherencia-text-main: #f1f5f9;
+  --coherencia-text-muted: #94a3b8;
+  --coherencia-border: rgba(51, 65, 85, 0.8);
+}
+
+/* Light Mode Theme Adaptation Support (for light WordPress themes or toggle) */
+body.coherencia-light-mode,
+.coherencia-wp-scope.coherencia-theme-light {
+  --coherencia-bg-dark: #f8fafc;
+  --coherencia-bg-card: #ffffff;
+  --coherencia-text-main: #0f172a;
+  --coherencia-text-muted: #475569;
+  --coherencia-border: #cbd5e1;
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+body.coherencia-light-mode header.coherencia-sticky-header,
+body.coherencia-light-mode .bg-slate-900,
+body.coherencia-light-mode .bg-slate-900\/90,
+body.coherencia-light-mode .bg-slate-900\/80,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-900,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-900\/90,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-900\/80 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.coherencia-light-mode .bg-slate-800,
+body.coherencia-light-mode .bg-slate-800\/90,
+body.coherencia-light-mode .bg-slate-800\/80,
+body.coherencia-light-mode .bg-slate-800\/70,
+body.coherencia-light-mode .bg-slate-800\/50,
+body.coherencia-light-mode .bg-slate-800\/40,
+body.coherencia-light-mode .bg-slate-950,
+body.coherencia-light-mode .bg-slate-950\/40,
+body.coherencia-light-mode .bg-slate-950\/60,
+body.coherencia-light-mode .bg-slate-950\/80,
+body.coherencia-light-mode .bg-slate-950\/85,
+body.coherencia-light-mode .bg-slate-950\/90,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-800,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-800\/80,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-800\/70,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-950,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-950\/40,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-950\/60 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+body.coherencia-light-mode .border-slate-800,
+body.coherencia-light-mode .border-slate-800\/80,
+body.coherencia-light-mode .border-slate-800\/60,
+body.coherencia-light-mode .border-slate-700,
+body.coherencia-light-mode .border-slate-700\/80,
+.coherencia-wp-scope.coherencia-theme-light .border-slate-800,
+.coherencia-wp-scope.coherencia-theme-light .border-slate-700 {
+  border-color: #cbd5e1 !important;
+}
+
+body.coherencia-light-mode .text-white,
+body.coherencia-light-mode .text-slate-100,
+body.coherencia-light-mode .text-slate-200,
+.coherencia-wp-scope.coherencia-theme-light .text-white,
+.coherencia-wp-scope.coherencia-theme-light .text-slate-100,
+.coherencia-wp-scope.coherencia-theme-light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+body.coherencia-light-mode .text-slate-300,
+body.coherencia-light-mode .text-slate-400,
+.coherencia-wp-scope.coherencia-theme-light .text-slate-300,
+.coherencia-wp-scope.coherencia-theme-light .text-slate-400 {
+  color: #334155 !important;
+}
+
+/* Scoped container for compatibility with any third-party WordPress theme */
+.coherencia-wp-scope {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+.coherencia-wp-scope *,
+.coherencia-wp-scope *::before,
+.coherencia-wp-scope *::after {
+  box-sizing: border-box;
+}
+
+/* WordPress Admin Bar sticky header offset compatibility */
+body.admin-bar header.coherencia-sticky-header {
+  top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+  body.admin-bar header.coherencia-sticky-header {
+    top: 46px;
+  }
+}
+
+/* WordPress Core Required Alignment & Accessibility Classes */
+.alignwide {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alignfull {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.alignleft {
+  float: left;
+  margin-right: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.alignright {
+  float: right;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.aligncenter {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wp-caption {
+  max-width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.wp-caption-text,
+.gallery-caption {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important;
+}
+
+.bypostauthor {
+  display: block;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  color: #c7d2fe;
+}

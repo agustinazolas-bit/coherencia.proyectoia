@@ -1,0 +1,66 @@
+/**
+ * Scoped CSS for COHERENCIA Universal WordPress Plugin
+ * Designed to integrate cleanly inside ANY active WordPress theme (Astra, GeneratePress, Kadence, Elementor, Divi, Twenty Twenty-Four/Five)
+ * without polluting or overriding global theme styles.
+ */
+
+.coherencia-wp-scope {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  isolation: isolate;
+}
+
+.coherencia-wp-scope *,
+.coherencia-wp-scope *::before,
+.coherencia-wp-scope *::after {
+  box-sizing: border-box;
+}
+
+/* Protect inside links and buttons from hostile WordPress theme CSS overrides */
+.coherencia-wp-scope a {
+  text-decoration: none !important;
+}
+
+.coherencia-wp-scope button,
+.coherencia-wp-scope input,
+.coherencia-wp-scope select {
+  font-family: inherit;
+}
+
+/* Light Mode Adaptation when [coherencia_auditor theme="light"] is used on light WP themes */
+.coherencia-wp-scope.coherencia-theme-light {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-900,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-900\/90,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-800\/70 {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-950,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-950\/80,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-950\/60,
+.coherencia-wp-scope.coherencia-theme-light .bg-slate-950\/40 {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.coherencia-wp-scope.coherencia-theme-light .text-white,
+.coherencia-wp-scope.coherencia-theme-light .text-slate-100,
+.coherencia-wp-scope.coherencia-theme-light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+.coherencia-wp-scope.coherencia-theme-light .text-slate-300,
+.coherencia-wp-scope.coherencia-theme-light .text-slate-400 {
+  color: #334155 !important;
+}

@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #ef4444;
+    color: #ffffff;
+  }
+
+  /* Custom Red, White & Black Scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #000000;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #7f1d1d;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ef4444;
+  }
+}
+
+/* Appearance Animations for Interactive Blocks */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.glow-card {
+  transition: all 0.25s ease-out;
+}
+.glow-card:hover {
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.18);
+}
+
+/* Stagger Delays */
+.delay-50  { animation-delay: 50ms; }
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-250 { animation-delay: 250ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-350 { animation-delay: 350ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-450 { animation-delay: 450ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* Subtle Noir Detective HUD corner accents */
+.hud-corner {
+  position: relative;
+}
+.hud-corner::before, .hud-corner::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+}
+.hud-corner::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid rgba(239, 68, 68, 0.7);
+  border-left: 1.5px solid rgba(239, 68, 68, 0.7);
+}
+.hud-corner::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid rgba(239, 68, 68, 0.7);
+  border-right: 1.5px solid rgba(239, 68, 68, 0.7);
+}
+
+/* Hide scrollbar helper */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Opening Detective Light Flickering & Revelation Animation */
+@keyframes detectiveLightReveal {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  98% {
+    opacity: 0.05;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes detectiveFlickerBeam {
+  0% {
+    background: radial-gradient(circle 240px at 46% 32%, rgba(255, 255, 255, 0.5) 0%, rgba(220, 38, 38, 0.28) 35%, rgba(0, 0, 0, 0.98) 75%, #000000 100%);
+    opacity: 0.85;
+  }
+  4% {
+    opacity: 0.25;
+  }
+  8% {
+    opacity: 0.9;
+    background: radial-gradient(circle 260px at 48% 34%, rgba(255, 255, 255, 0.55) 0%, rgba(220, 38, 38, 0.3) 38%, rgba(0, 0, 0, 0.98) 75%, #000000 100%);
+  }
+  12% {
+    opacity: 0.15;
+  }
+  16% {
+    opacity: 0.8;
+  }
+  22% {
+    opacity: 0.2;
+  }
+  26% {
+    opacity: 0.95;
+    background: radial-gradient(circle 340px at 50% 38%, rgba(255, 255, 255, 0.6) 0%, rgba(220, 38, 38, 0.28) 40%, rgba(0, 0, 0, 0.96) 78%, #000000 100%);
+  }
+  32% {
+    opacity: 0.35;
+  }
+  38% {
+    opacity: 0.85;
+  }
+  44% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.9;
+    background: radial-gradient(circle 460px at 50% 42%, rgba(255, 255, 255, 0.65) 0%, rgba(220, 38, 38, 0.22) 48%, rgba(0, 0, 0, 0.92) 80%, #000000 100%);
+  }
+  60% {
+    opacity: 0.55;
+  }
+  68% {
+    opacity: 0.95;
+    background: radial-gradient(circle 640px at 50% 45%, rgba(255, 255, 255, 0.65) 0%, rgba(220, 38, 38, 0.18) 55%, rgba(0, 0, 0, 0.85) 85%, #000000 100%);
+  }
+  78% {
+    opacity: 0.75;
+  }
+  86% {
+    opacity: 0.95;
+    background: radial-gradient(circle 980px at 50% 48%, rgba(255, 255, 255, 0.7) 0%, rgba(220, 38, 38, 0.12) 65%, rgba(0, 0, 0, 0.6) 90%, transparent 100%);
+  }
+  94% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0;
+    background: radial-gradient(circle 1600px at 50% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+  }
+}
+
+@keyframes boardInitialReveal {
+  0% {
+    filter: brightness(0.28) contrast(140%);
+  }
+  8% {
+    filter: brightness(0.6) contrast(130%);
+  }
+  12% {
+    filter: brightness(0.25) contrast(145%);
+  }
+  16% {
+    filter: brightness(0.55) contrast(135%);
+  }
+  22% {
+    filter: brightness(0.3) contrast(140%);
+  }
+  26% {
+    filter: brightness(0.7) contrast(125%);
+  }
+  38% {
+    filter: brightness(0.5) contrast(130%);
+  }
+  50% {
+    filter: brightness(0.8) contrast(120%);
+  }
+  60% {
+    filter: brightness(0.65) contrast(125%);
+  }
+  68% {
+    filter: brightness(0.9) contrast(115%);
+  }
+  86% {
+    filter: brightness(0.98) contrast(105%);
+  }
+  100% {
+    filter: brightness(1) contrast(100%);
+  }
+}
+
+.animate-detective-light-reveal {
+  animation: detectiveLightReveal 3.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-detective-beam {
+  animation: detectiveFlickerBeam 3.2s ease-in-out forwards;
+}
+
+.animate-board-reveal {
+  animation: boardInitialReveal 3.2s ease-in-out forwards;
+}
