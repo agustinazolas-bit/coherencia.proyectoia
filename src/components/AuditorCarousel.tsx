@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AuditorStructuredData, VerifiedSource } from '../types';
+import { AuditorStructuredData, VerifiedSource, NewsVideoReport } from '../types';
 import { 
   FileText, 
   ShieldCheck, 
@@ -18,7 +18,13 @@ import {
   Gauge,
   Calendar,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Tv,
+  Play,
+  CheckCircle,
+  X,
+  Sparkles,
+  ExternalLink
 } from 'lucide-react';
 import { playPaperSlide, playPinClick } from '../utils/audio';
 
@@ -26,6 +32,7 @@ interface AuditorCarouselProps {
   structured: AuditorStructuredData;
   query?: string;
   verifiedSources?: VerifiedSource[];
+  newsVideos?: NewsVideoReport[];
 }
 
 // Parse quantitative values from fact-checking text for easy-to-understand charts
@@ -38,7 +45,6 @@ function extractFactCheckMetrics(factChecking: string, status: string): {
 } {
   const text = factChecking || '';
   
-  // Look for percentages in text (e.g., "85%" vs "42.8%", or "15%" vs "4.3%")
   const percentMatches = text.match(/(\d+(?:\.\d+)?)\s*%/g);
   let claimed = 85;
   let verified = 45;
@@ -75,57 +81,69 @@ function extractFactCheckMetrics(factChecking: string, status: string): {
 
 export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
   structured,
-  query,
-  verifiedSources
+  query: _query,
+  verifiedSources: _verifiedSources,
+  newsVideos: propVideos
 }) => {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [playingVideo, setPlayingVideo] = useState<NewsVideoReport | null>(null);
 
-  const totalSlides = 4;
+  // Unified video list from structured or props
+  const allVideos: NewsVideoReport[] = (structured.newsVideos && structured.newsVideos.length > 0)
+    ? structured.newsVideos
+    : (propVideos || []);
+
+  const totalSlides = 5;
   const factMetrics = extractFactCheckMetrics(structured.factChecking, structured.status);
 
-  // Status badge styling helper
+  // Status badge styling helper (formal, friendly, and accessible)
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case 'CUMPLIDA':
       case 'COMPLETO':
       case 'COMPLETA':
         return {
-          icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />,
-          bg: 'bg-emerald-950/80 border-emerald-500/70 text-emerald-300 font-semibold',
+          icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />,
+          bg: 'bg-emerald-950/70 border-emerald-500/60 text-emerald-300 font-semibold',
           label: 'Cumplida (100%)',
-          barColor: 'bg-emerald-500'
+          barColor: 'bg-emerald-500',
+          dot: 'bg-emerald-400'
         };
       case 'EN CURSO':
       case 'EN PROCESO':
       case 'EN TRAMITE':
         return {
-          icon: <Clock className="w-3.5 h-3.5 text-amber-400" />,
-          bg: 'bg-amber-950/80 border-amber-500/70 text-amber-300 font-semibold',
+          icon: <Clock className="w-4 h-4 text-amber-400" />,
+          bg: 'bg-amber-950/70 border-amber-500/60 text-amber-300 font-semibold',
           label: 'En curso / En trámite',
-          barColor: 'bg-amber-500'
+          barColor: 'bg-amber-500',
+          dot: 'bg-amber-400'
         };
       case 'BLOQUEADA':
         return {
-          icon: <Ban className="w-3.5 h-3.5 text-red-400" />,
-          bg: 'bg-red-950/80 border-red-500/70 text-red-300 font-semibold',
+          icon: <Ban className="w-4 h-4 text-rose-400" />,
+          bg: 'bg-rose-950/70 border-rose-500/60 text-rose-300 font-semibold',
           label: 'Bloqueada por trámite/ley',
-          barColor: 'bg-red-500'
+          barColor: 'bg-rose-500',
+          dot: 'bg-rose-400'
         };
       case 'INCUMPLIDA':
         return {
-          icon: <XCircle className="w-3.5 h-3.5 text-red-400" />,
-          bg: 'bg-red-950/80 border-red-500/70 text-red-300 font-semibold',
+          icon: <XCircle className="w-4 h-4 text-rose-400" />,
+          bg: 'bg-rose-950/70 border-rose-500/60 text-rose-300 font-semibold',
           label: 'Incumplida',
-          barColor: 'bg-red-500'
+          barColor: 'bg-rose-500',
+          dot: 'bg-rose-400'
         };
       case 'SIN_DATOS':
       case 'SIN DATOS':
       default:
         return {
-          icon: <HelpCircle className="w-3.5 h-3.5 text-orange-400" />,
-          bg: 'bg-orange-950/80 border-orange-500/70 text-orange-300 font-semibold',
+          icon: <HelpCircle className="w-4 h-4 text-orange-400" />,
+          bg: 'bg-orange-950/70 border-orange-500/60 text-orange-300 font-semibold',
           label: 'Sin datos oficiales formalizados',
-          barColor: 'bg-orange-500'
+          barColor: 'bg-orange-500',
+          dot: 'bg-orange-400'
         };
     }
   };
@@ -139,11 +157,13 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
         goToNext();
       } else if (e.key === 'ArrowLeft') {
         goToPrev();
+      } else if (e.key === 'Escape' && playingVideo) {
+        setPlayingVideo(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeSlide]);
+  }, [activeSlide, playingVideo]);
 
   const goToNext = () => {
     playPaperSlide();
@@ -163,8 +183,8 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
   // Risk meter level calculations
   const getRiskNumeric = (risk?: string) => {
     switch (risk) {
-      case 'Crítico': return { val: 92, label: 'Crítico', color: 'text-red-400', bar: 'bg-red-600' };
-      case 'Alto': return { val: 72, label: 'Alto', color: 'text-red-400', bar: 'bg-red-500' };
+      case 'Crítico': return { val: 92, label: 'Crítico', color: 'text-rose-400', bar: 'bg-rose-600' };
+      case 'Alto': return { val: 72, label: 'Alto', color: 'text-orange-400', bar: 'bg-orange-500' };
       case 'Medio': return { val: 48, label: 'Medio', color: 'text-amber-400', bar: 'bg-amber-500' };
       case 'Bajo':
       default: return { val: 24, label: 'Bajo', color: 'text-emerald-400', bar: 'bg-emerald-500' };
@@ -173,32 +193,33 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
 
   const riskInfo = getRiskNumeric(structured.riskLevel);
 
-  const slideTitles = [
-    { title: '1. Promesa & Trazabilidad', subtitle: 'Compromiso 2026, estado de ejecución y respaldo oficial' },
-    { title: '2. Fact-Checking', subtitle: 'Cotejo de rigor documental y gráfico comparativo de datos' },
-    { title: '3. Proyección & Riesgo', subtitle: 'Medidor de riesgo e impacto a 6 meses' },
-    { title: '4. Veredicto Histórico', subtitle: 'Texto exclusivo de consistencia doctrinaria 2017-2026' }
+  const slideTabs = [
+    { title: 'Toda la Info', subtitle: 'Visión integral del Auditor' },
+    { title: 'Fact-Checking', subtitle: 'Cotejo y gráfico comparativo de datos' },
+    { title: 'Proyección & Riesgo', subtitle: 'Medidor de riesgo e impacto a 6 meses' },
+    { title: 'Veredicto Histórico', subtitle: 'Consistencia doctrinaria 2017-2026' },
+    { title: 'Catálogo de Videos', subtitle: 'Reportajes periodísticos verificados' }
   ];
 
   return (
-    <div className="bg-neutral-950/95 border border-red-950 rounded-2xl overflow-hidden shadow-2xl flex flex-col justify-between">
+    <div className="bg-[#202226] border border-[#34373e] rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between font-sans">
       
-      {/* Dynamic Carousel Navigation Bar */}
-      <div className="px-3.5 sm:px-5 py-3 bg-black border-b border-red-950 flex flex-wrap items-center justify-between gap-2.5">
+      {/* Dynamic Carousel Navigation Bar matching reference image formal/friendly styling */}
+      <div className="px-3.5 sm:px-5 py-3 bg-[#1c1e22] border-b border-[#34373e] flex flex-wrap items-center justify-between gap-2.5">
         
         {/* Step Indicator Tabs */}
-        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
-          {slideTitles.map((tab, idx) => {
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 max-w-full">
+          {slideTabs.map((tab, idx) => {
             const isActive = activeSlide === idx;
             return (
               <button
                 key={idx}
                 type="button"
                 onClick={() => goToSlide(idx)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-[11px] font-mono font-semibold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95 ${
                   isActive
-                    ? 'bg-red-600 text-white shadow-md border border-red-500'
-                    : 'bg-neutral-900/90 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800 border border-red-950/60'
+                    ? 'bg-blue-600 text-white shadow-sm font-semibold'
+                    : 'bg-[#27292f] text-neutral-300 hover:text-white hover:bg-[#30333b]'
                 }`}
                 title={tab.subtitle}
               >
@@ -210,8 +231,8 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
         </div>
 
         {/* Carousel Prev / Next Controls & Slide Counter */}
-        <div className="flex items-center gap-1.5 shrink-0 ml-auto font-mono">
-          <span className="text-[10px] text-neutral-400 bg-neutral-900/90 border border-red-950 px-2 py-1 rounded-md">
+        <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+          <span className="text-xs text-neutral-400 bg-[#26282e] border border-[#34373e] px-2.5 py-1 rounded-md font-sans">
             Bloque <strong className="text-white">{activeSlide + 1}</strong> de {totalSlides}
           </span>
           <button
@@ -219,108 +240,126 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
             onClick={goToPrev}
             aria-label="Bloque anterior"
             title="Bloque anterior (o tecla flecha izquierda)"
-            className="w-7 h-7 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-red-950 text-neutral-300 hover:text-white flex items-center justify-center cursor-pointer active:scale-95 transition-colors"
+            className="w-7 h-7 rounded-lg bg-[#27292f] hover:bg-[#34373e] text-neutral-300 hover:text-white flex items-center justify-center cursor-pointer active:scale-95 transition-colors border border-[#34373e]"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             type="button"
             onClick={goToNext}
             aria-label="Siguiente bloque"
             title="Siguiente bloque (o tecla flecha derecha)"
-            className="w-7 h-7 rounded-lg bg-neutral-900 hover:bg-neutral-800 border border-red-950 text-neutral-300 hover:text-white flex items-center justify-center cursor-pointer active:scale-95 transition-colors"
+            className="w-7 h-7 rounded-lg bg-[#27292f] hover:bg-[#34373e] text-neutral-300 hover:text-white flex items-center justify-center cursor-pointer active:scale-95 transition-colors border border-[#34373e]"
           >
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
 
       {/* Main Carousel Slides Container */}
-      <div className="p-4 sm:p-6 min-h-[340px] flex flex-col justify-between">
+      <div className="p-4 sm:p-5 min-h-[360px] flex flex-col justify-between">
         
         {/* ========================================================================= */}
-        {/* SLIDE 0: REGISTRO DE PROMESA + ESTADO DE EJECUCIÓN + TRAZABILIDAD OFICIAL */}
+        {/* SLIDE 0: "TODA LA INFO DEL AUDITOR" (VISIÓN INTEGRAL CONDENSADA)           */}
         {/* ========================================================================= */}
         {activeSlide === 0 && (
           <div className="space-y-4 animate-fade-in-up">
             
             {/* Header info */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-red-950/80">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-black text-red-400 border border-red-500/60">
-                  <FileText className="w-4 h-4" />
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#34373e]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                  <FileText className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-mono tracking-widest text-red-400 block font-bold">
-                    BLOQUE 1 · COMPROMISO & TRAZABILIDAD OFICIAL
+                  <span className="text-[11px] uppercase tracking-wider text-blue-400 block font-bold font-sans">
+                    AUDITORÍA INTEGRAL CONDENSADA · 100 DÍAS
                   </span>
-                  <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
                     {structured.theme}
                   </h3>
                 </div>
               </div>
 
-              {/* Status Badge */}
-              <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold ${statusBadge.bg}`}>
-                {statusBadge.icon}
-                <span>Status: {structured.status}</span>
+              {/* Classification & Status Badges */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {structured.evidenceClassification && (
+                  <span className={`px-3 py-1 rounded-full border text-xs font-bold ${
+                    structured.evidenceClassification === 'CONFIRMADA' ? 'bg-emerald-950/80 border-emerald-500/60 text-emerald-300' :
+                    structured.evidenceClassification === 'PARCIALMENTE CONFIRMADA' ? 'bg-amber-950/80 border-amber-500/60 text-amber-300' :
+                    structured.evidenceClassification === 'CONTRADICHA' ? 'bg-rose-950/80 border-rose-500/60 text-rose-300' :
+                    structured.evidenceClassification === 'DESACTUALIZADA' ? 'bg-slate-900 border-slate-500/60 text-slate-300' :
+                    'bg-orange-950/80 border-orange-500/60 text-orange-300'
+                  }`}>
+                    Evidencia: {structured.evidenceClassification}
+                  </span>
+                )}
+                <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-semibold ${statusBadge.bg}`}>
+                  {statusBadge.icon}
+                  <span>Estado: {structured.status}</span>
+                </div>
+                {structured.structuredProjection?.uncertaintyLevel && (
+                  <span className="px-2.5 py-1 rounded-full border border-[#383b43] bg-[#26282e] text-xs text-neutral-300">
+                    Incertidumbre: <strong className="text-white">{structured.structuredProjection.uncertaintyLevel}</strong>
+                  </span>
+                )}
               </div>
             </div>
 
             {/* Sub-card 1: Registro de Promesa */}
-            <div className="bg-black/90 border border-red-950 rounded-xl p-3.5 sm:p-4 glow-card">
+            <div className="bg-[#26282e] border border-[#383b43] rounded-xl p-3.5 sm:p-4">
               <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-[11px] font-bold text-neutral-300 uppercase font-mono tracking-wider flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                <span className="text-xs font-bold text-neutral-200 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                   1. Registro de Promesa (Programa Presidencial 2026)
                 </span>
-                <span className="text-[10px] font-mono text-neutral-500">
+                <span className="text-[11px] text-neutral-400 font-sans">
                   11 mar – 19 jun 2026
                 </span>
               </div>
-              <blockquote className="italic text-white border-l-3 border-red-500 pl-3.5 py-2 text-xs sm:text-sm font-sans bg-neutral-950/90 rounded-r-lg leading-relaxed">
+              <blockquote className="italic text-white border-l-3 border-blue-500 pl-3.5 py-1.5 text-xs sm:text-sm font-sans bg-[#202226]/80 rounded-r-lg leading-relaxed">
                 "{structured.promise2026}"
               </blockquote>
             </div>
 
-            {/* Sub-card 2: Estado de Ejecución y Trazabilidad Documental */}
-            <div className="bg-black/90 border border-red-950 rounded-xl p-3.5 sm:p-4 space-y-3 glow-card">
+            {/* Sub-card 2: Estado de Ejecución y Trazabilidad */}
+            <div className="bg-[#26282e] border border-[#383b43] rounded-xl p-3.5 sm:p-4 space-y-3">
               <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 text-[11px] font-bold text-red-400 uppercase font-mono tracking-wider">
-                  <ShieldCheck className="w-4 h-4 text-red-400" />
-                  <span>2. Estado de Ejecución & Trazabilidad Administrativa</span>
+                <div className="flex items-center gap-2 text-xs font-bold text-blue-400 uppercase tracking-wider font-sans">
+                  <ShieldCheck className="w-4 h-4 text-blue-400" />
+                  <span>2. Estado de Ejecución & Trazabilidad Documental (Nivel 1)</span>
                 </div>
-                <span className="text-[10px] font-mono text-neutral-400">
+                <span className="text-xs font-sans text-neutral-300">
                   {statusBadge.label}
                 </span>
               </div>
 
               {/* Progress bar visual */}
               <div className="space-y-1">
-                <div className="flex items-center justify-between text-[11px] font-mono">
+                <div className="flex items-center justify-between text-xs font-sans">
                   <span className="text-neutral-400">Nivel de ejecución administrativa estimado:</span>
                   <strong className="text-white">
                     {structured.status === 'CUMPLIDA' || structured.status === 'COMPLETO' ? '100%' :
                      structured.status === 'EN CURSO' || structured.status === 'EN PROCESO' ? '58%' :
-                     structured.status === 'BLOQUEADA' ? '28%' : '15%'}
+                     structured.status === 'BLOQUEADA' ? '28%' : '0%'}
                   </strong>
                 </div>
-                <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden border border-red-950/80">
+                <div className="h-2 w-full bg-[#1c1e22] rounded-full overflow-hidden border border-[#383b43]">
                   <div 
-                    className={`h-full ${statusBadge.barColor} transition-all duration-700`}
+                    className={`h-full ${statusBadge.barColor} transition-all duration-700 rounded-full`}
                     style={{
                       width: structured.status === 'CUMPLIDA' || structured.status === 'COMPLETO' ? '100%' :
                              structured.status === 'EN CURSO' || structured.status === 'EN PROCESO' ? '58%' :
-                             structured.status === 'BLOQUEADA' ? '28%' : '15%'
+                             structured.status === 'BLOQUEADA' ? '28%' : '4%'
                     }}
                   />
                 </div>
               </div>
 
               {/* Evidence Text */}
-              <div className="text-xs sm:text-sm text-neutral-300 leading-relaxed bg-neutral-950/90 p-3 rounded-lg border border-red-950/60">
-                <strong className="text-white block font-mono text-[11px] uppercase tracking-wider mb-1 text-red-300">
-                  Trazabilidad Documental / Evidencia Registrada:
+              <div className="text-xs sm:text-sm text-neutral-300 leading-relaxed bg-[#202226] p-3 rounded-lg border border-[#383b43]">
+                <strong className="block text-xs uppercase tracking-wider mb-1 font-sans text-blue-300">
+                  Trazabilidad Documental y Actos Verificados:
                 </strong>
                 <p className="font-sans leading-relaxed">
                   {structured.evidence}
@@ -328,106 +367,205 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
               </div>
             </div>
 
+            {/* Quick Summary Grid of Points 3, 4, 5 */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+              {/* Fact-Checking Highlight */}
+              <div className="p-3 rounded-xl bg-[#26282e] border border-[#383b43] flex flex-col justify-between">
+                <div>
+                  <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wider block mb-1">
+                    3. Fact-Checking & Presupuesto
+                  </span>
+                  <p className="text-xs text-neutral-300 line-clamp-3 leading-relaxed">
+                    {structured.factChecking}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => goToSlide(1)}
+                  className="mt-2 text-[11px] text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Ver control jurídico y fiscal</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+
+              {/* Proyección Highlight */}
+              <div className="p-3 rounded-xl bg-[#26282e] border border-[#383b43] flex flex-col justify-between">
+                <div>
+                  <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider block mb-1">
+                    4. Escenario · Riesgo {structured.riskLevel}
+                  </span>
+                  <p className="text-xs text-neutral-300 line-clamp-3 leading-relaxed">
+                    {structured.sixMonthProjection}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => goToSlide(2)}
+                  className="mt-2 text-[11px] text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Ver supuestos e incertidumbre</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+
+              {/* Veredicto Highlight */}
+              <div className="p-3 rounded-xl bg-[#26282e] border border-[#383b43] flex flex-col justify-between">
+                <div>
+                  <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block mb-1">
+                    5. Veredicto: {structured.verdict}
+                  </span>
+                  <p className="text-xs text-neutral-300 line-clamp-3 leading-relaxed">
+                    {structured.historicalNarrative}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => goToSlide(3)}
+                  className="mt-2 text-[11px] text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Ver historia y brechas</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+            </div>
+
           </div>
         )}
 
         {/* ========================================================================= */}
-        {/* SLIDE 1: PUNTO 3 — ANÁLISIS DE FACT-CHECKING CON GRÁFICO DE FÁCIL COMPRENSIÓN */}
+        {/* SLIDE 1: FACT-CHECKING, SEPARACIÓN EPISTÉMICA, JURÍDICA Y FISCAL         */}
         {/* ========================================================================= */}
         {activeSlide === 1 && (
           <div className="space-y-4 animate-fade-in-up">
             
             {/* Header info */}
-            <div className="flex items-center justify-between gap-2 pb-3 border-b border-red-950/80">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-black text-red-400 border border-red-500/60">
-                  <Search className="w-4 h-4" />
+            <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#34373e]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                  <Search className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-mono tracking-widest text-red-400 block font-bold">
-                    BLOQUE 2 · FACT-CHECKING & DESACOPLE DE DATOS
+                  <span className="text-[11px] uppercase tracking-wider text-blue-400 block font-bold">
+                    BLOQUE 2 · FACT-CHECKING, VERIFICACIÓN JURÍDICA Y FISCAL
                   </span>
-                  <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                    3. Análisis de Fact-Checking y Rigor Documental
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                    3. Separación Epistémica, Legal y Presupuestaria
                   </h3>
                 </div>
               </div>
-              <span className="text-[10px] font-mono bg-black text-neutral-300 border border-red-900 px-2 py-0.5 rounded">
-                Cotejo Cruzado
+              <span className="text-xs bg-[#26282e] text-neutral-300 border border-[#383b43] px-2.5 py-1 rounded-md">
+                {structured.evidenceClassification || 'Cotejo Cruzado'}
               </span>
             </div>
 
             {/* Fact-Checking Textual Analysis */}
-            <div className="bg-black/90 border border-red-950 rounded-xl p-3.5 sm:p-4 glow-card">
+            <div className="bg-[#26282e] border border-[#383b43] rounded-xl p-3.5 sm:p-4">
               <p className="text-neutral-200 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans">
                 {structured.factChecking}
               </p>
             </div>
 
-            {/* EASY-TO-UNDERSTAND GRAPHIC: Dual Contrast Bar + Discrepancy Gauge */}
-            <div className="bg-black/90 border border-red-500/50 rounded-xl p-3.5 sm:p-4 space-y-3.5 shadow-lg">
-              <div className="flex items-center justify-between gap-2 border-b border-red-950 pb-2">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-white font-mono uppercase tracking-wider">
-                  <BarChart3 className="w-4 h-4 text-red-400" />
-                  <span>Gráfico Comparativo: Relato Declarado vs. Registro Real Auditado</span>
+            {/* Epistemic Separation Grid */}
+            {structured.epistemicSeparation && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+                <div className="p-3 rounded-xl bg-[#26282e] border border-emerald-500/30 space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-emerald-400 block">Hechos Comprobados (Nivel 1)</span>
+                  <ul className="space-y-1 text-neutral-300 list-disc pl-4">
+                    {structured.epistemicSeparation.confirmedFacts.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
-                <span className="text-[10px] font-mono text-neutral-400">
-                  Brecha: <strong className="text-red-400">{factMetrics.gapPct}%</strong>
+                <div className="p-3 rounded-xl bg-[#26282e] border border-amber-500/30 space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-amber-400 block">Declaraciones de Autoridades</span>
+                  {structured.epistemicSeparation.authorityStatements.length > 0 ? (
+                    <ul className="space-y-1 text-neutral-300 list-disc pl-4">
+                      {structured.epistemicSeparation.authorityStatements.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-neutral-400">Sin declaraciones directas atribuidas.</p>
+                  )}
+                </div>
+                <div className="p-3 rounded-xl bg-[#26282e] border border-blue-500/30 space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-blue-300 block">Interpretación / Análisis</span>
+                  <p className="text-neutral-300 leading-relaxed">{structured.epistemicSeparation.researcherAnalysis}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Legal & Budget Verification Cards */}
+            {(structured.legalVerification || structured.budgetVerification) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                {structured.legalVerification && (
+                  <div className="p-3.5 rounded-xl bg-[#26282e] border border-[#383b43] space-y-1.5">
+                    <span className="text-[11px] font-bold uppercase text-blue-400 block">Verificación Jurídica (BCN / CGR)</span>
+                    <p><strong className="text-white">Rango normativo:</strong> {structured.legalVerification.normRank}</p>
+                    <p><strong className="text-white">Artículos / Normas:</strong> {structured.legalVerification.articlesCited}</p>
+                    <p><strong className="text-white">Naturaleza jurídica:</strong> {structured.legalVerification.legalNature}</p>
+                    {structured.legalVerification.scopeAndControversy && (
+                      <p className="text-neutral-400"><strong>Controversia:</strong> {structured.legalVerification.scopeAndControversy}</p>
+                    )}
+                  </div>
+                )}
+
+                {structured.budgetVerification && (
+                  <div className="p-3.5 rounded-xl bg-[#26282e] border border-[#383b43] space-y-1.5">
+                    <span className="text-[11px] font-bold uppercase text-emerald-400 block">Verificación Presupuestaria (DIPRES)</span>
+                    <p><strong className="text-white">Institución / Documento:</strong> {structured.budgetVerification.institution} · {structured.budgetVerification.budgetDocument}</p>
+                    <p><strong className="text-white">Subtítulo / Período:</strong> {structured.budgetVerification.itemOrSubtitle} ({structured.budgetVerification.period})</p>
+                    <p><strong className="text-white">Naturaleza / Moneda:</strong> {structured.budgetVerification.spendingNature} · {structured.budgetVerification.currency}</p>
+                    <p className="text-neutral-400"><strong>Aprobado vs. Ejecutado:</strong> {structured.budgetVerification.approvedVsExecutedNote}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Contrast Chart */}
+            <div className="bg-[#26282e] border border-blue-500/30 rounded-xl p-3.5 sm:p-4 space-y-3 shadow-md">
+              <div className="flex items-center justify-between gap-2 border-b border-[#383b43] pb-2">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-white uppercase tracking-wider">
+                  <BarChart3 className="w-4 h-4 text-blue-400" />
+                  <span>Contraste Cuantitativo: Meta Declarada vs. Ejecución Documentada</span>
+                </div>
+                <span className="text-xs text-neutral-400">
+                  Brecha: <strong className="text-blue-400">{factMetrics.gapPct}%</strong>
                 </span>
               </div>
 
-              {/* Visual Bars Comparison */}
-              <div className="space-y-2.5">
-                {/* Bar 1: Government Claim / Target */}
+              <div className="space-y-3">
                 <div>
-                  <div className="flex items-center justify-between text-[11px] font-mono mb-1">
+                  <div className="flex items-center justify-between text-xs mb-1">
                     <span className="text-neutral-300 flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-neutral-400"></span>
                       {factMetrics.claimLabel}
                     </span>
                     <strong className="text-white">{factMetrics.claimedPct}%</strong>
                   </div>
-                  <div className="h-3 w-full bg-neutral-900 rounded-full overflow-hidden border border-neutral-800">
+                  <div className="h-3 w-full bg-[#1c1e22] rounded-full overflow-hidden border border-[#383b43]">
                     <div 
-                      className="h-full bg-gradient-to-r from-neutral-600 to-neutral-400 rounded-full transition-all duration-700"
+                      className="h-full bg-gradient-to-r from-neutral-500 to-neutral-300 rounded-full transition-all duration-700"
                       style={{ width: `${factMetrics.claimedPct}%` }}
                     />
                   </div>
                 </div>
 
-                {/* Bar 2: Verified Execution */}
                 <div>
-                  <div className="flex items-center justify-between text-[11px] font-mono mb-1">
+                  <div className="flex items-center justify-between text-xs mb-1">
                     <span className="text-neutral-300 flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                       {factMetrics.verifiedLabel}
                     </span>
-                    <strong className="text-red-300 font-bold">{factMetrics.verifiedPct}%</strong>
+                    <strong className="text-blue-300 font-bold">{factMetrics.verifiedPct}%</strong>
                   </div>
-                  <div className="h-3 w-full bg-neutral-900 rounded-full overflow-hidden border border-red-950">
+                  <div className="h-3 w-full bg-[#1c1e22] rounded-full overflow-hidden border border-blue-900/60">
                     <div 
-                      className="h-full bg-gradient-to-r from-red-700 to-red-500 rounded-full transition-all duration-700"
+                      className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-700"
                       style={{ width: `${factMetrics.verifiedPct}%` }}
                     />
                   </div>
-                </div>
-              </div>
-
-              {/* Interpretative Discrepancy Badges */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-mono text-[10px]">
-                <div className="p-2 rounded-lg bg-neutral-950 border border-red-950 flex flex-col justify-between">
-                  <span className="text-neutral-400">Cotejo Documental:</span>
-                  <span className="text-white font-bold mt-0.5">100% Fuentes Primarias</span>
-                </div>
-                <div className="p-2 rounded-lg bg-neutral-950 border border-red-950 flex flex-col justify-between">
-                  <span className="text-neutral-400">Nivel de Desacople:</span>
-                  <span className={`font-bold mt-0.5 ${factMetrics.gapPct > 30 ? 'text-red-400' : factMetrics.gapPct > 15 ? 'text-amber-400' : 'text-emerald-400'}`}>
-                    {factMetrics.gapPct > 30 ? 'Desacople Crítico' : factMetrics.gapPct > 15 ? 'Desacople Moderado' : 'Consistente'}
-                  </span>
-                </div>
-                <div className="p-2 rounded-lg bg-neutral-950 border border-red-950 flex flex-col justify-between">
-                  <span className="text-neutral-400">Órganos de Control:</span>
-                  <span className="text-white font-bold mt-0.5">CGR / DIPRES / Policías</span>
                 </div>
               </div>
             </div>
@@ -436,151 +574,138 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
         )}
 
         {/* ========================================================================= */}
-        {/* SLIDE 2: PUNTO 4 — PROYECCIÓN DE IMPACTO Y RIESGO CON GRÁFICOS DE FÁCIL COMPRENSIÓN */}
+        {/* SLIDE 2: PROYECCIÓN ESTRUCTURADA CON SUPUESTOS E INCERTIDUMBRE            */}
         {/* ========================================================================= */}
         {activeSlide === 2 && (
           <div className="space-y-4 animate-fade-in-up">
             
             {/* Header info */}
-            <div className="flex items-center justify-between gap-2 pb-3 border-b border-red-950/80">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-black text-red-400 border border-red-500/60">
-                  <TrendingUp className="w-4 h-4" />
+            <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#34373e]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                  <TrendingUp className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-mono tracking-widest text-red-400 block font-bold">
-                    BLOQUE 3 · ESCENARIO PROSPECTIVO (6 MESES)
+                  <span className="text-[11px] uppercase tracking-wider text-blue-400 block font-bold">
+                    BLOQUE 3 · CONTROL DE CAUSALIDAD Y PROYECCIÓN CONDICIONAL
                   </span>
-                  <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                    4. Proyección de Impacto y Nivel de Riesgo
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                    4. Escenario Prospectivo (No certeza futura) y Nivel de Riesgo
                   </h3>
                 </div>
               </div>
-              <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full border font-bold ${
-                structured.riskLevel === 'Crítico' ? 'bg-red-950 text-white border-red-500' :
-                structured.riskLevel === 'Alto' ? 'bg-black text-red-400 border-red-600' :
-                structured.riskLevel === 'Medio' ? 'bg-neutral-950 text-amber-300 border-amber-600' :
-                'bg-black text-emerald-400 border-emerald-600'
-              }`}>
-                Riesgo: {structured.riskLevel}
-              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                {structured.structuredProjection?.uncertaintyLevel && (
+                  <span className="text-xs px-3 py-1 rounded-full border border-blue-500/50 bg-blue-950/60 text-blue-200 font-semibold">
+                    Incertidumbre: {structured.structuredProjection.uncertaintyLevel}
+                  </span>
+                )}
+                <span className={`text-xs px-3 py-1 rounded-full border font-semibold ${
+                  structured.riskLevel === 'Crítico' ? 'bg-rose-950/80 text-rose-300 border-rose-500' :
+                  structured.riskLevel === 'Alto' ? 'bg-orange-950/80 text-orange-300 border-orange-500' :
+                  structured.riskLevel === 'Medio' ? 'bg-amber-950/80 text-amber-300 border-amber-500' :
+                  'bg-emerald-950/80 text-emerald-300 border-emerald-500'
+                }`}>
+                  Riesgo: {structured.riskLevel}
+                </span>
+              </div>
             </div>
 
-            {/* Projection Text */}
-            <div className="bg-black/90 border border-red-950 rounded-xl p-3.5 sm:p-4 glow-card">
+            {/* Projection Narrative */}
+            <div className="bg-[#26282e] border border-[#383b43] rounded-xl p-3.5 sm:p-4">
               <p className="text-neutral-200 text-xs sm:text-sm leading-relaxed whitespace-pre-line font-sans">
                 {structured.sixMonthProjection}
               </p>
             </div>
 
-            {/* EASY-TO-UNDERSTAND GRAPHIC: Risk Meter Gauge + 6-Month Timeline */}
-            <div className="bg-black/90 border border-red-500/50 rounded-xl p-3.5 sm:p-4 space-y-3.5 shadow-lg">
-              
-              {/* Graphic 1: Segmented Risk Meter */}
+            {/* 4 Mandatory Projection Components */}
+            {structured.structuredProjection && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-[#26282e] border border-[#383b43] space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-blue-400 block">1. Antecedentes que la fundamentan</span>
+                  <p className="text-neutral-300 leading-relaxed">{structured.structuredProjection.antecedents}</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[#26282e] border border-[#383b43] space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-amber-400 block">2. Supuestos utilizados</span>
+                  <p className="text-neutral-300 leading-relaxed">{structured.structuredProjection.assumptions}</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[#26282e] border border-[#383b43] space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-emerald-400 block">3. Variables que podrían modificar el escenario</span>
+                  <p className="text-neutral-300 leading-relaxed">{structured.structuredProjection.modifyingVariables}</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[#26282e] border border-[#383b43] space-y-1">
+                  <span className="text-[11px] font-bold uppercase text-rose-400 block">4. Nivel de incertidumbre declarado</span>
+                  <p className="text-white font-bold text-sm">{structured.structuredProjection.uncertaintyLevel}</p>
+                  <p className="text-neutral-400">Escenario condicional sujeto a variables normativas, fiscales o diplomáticas.</p>
+                </div>
+              </div>
+            )}
+
+            {/* Risk Meter Gauge */}
+            <div className="bg-[#26282e] border border-blue-500/30 rounded-xl p-3.5 sm:p-4 space-y-2.5 shadow-md">
               <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs font-mono">
+                <div className="flex items-center justify-between text-xs">
                   <span className="text-neutral-300 flex items-center gap-1.5 font-bold uppercase">
-                    <Gauge className="w-4 h-4 text-red-400" />
-                    Semáforo de Riesgo Proyectado:
+                    <Gauge className="w-4 h-4 text-blue-400" />
+                    Semáforo de Riesgo Operativo:
                   </span>
                   <strong className={`text-xs ${riskInfo.color} font-bold`}>
                     Nivel {riskInfo.label} ({riskInfo.val}%)
                   </strong>
                 </div>
 
-                {/* 4 Segmented Progress Bar */}
                 <div className="grid grid-cols-4 gap-1.5 h-3">
-                  <div className={`rounded-sm transition-all ${riskInfo.val >= 20 ? 'bg-emerald-500' : 'bg-neutral-900 border border-neutral-800'}`} title="Riesgo Bajo (0-25%)" />
-                  <div className={`rounded-sm transition-all ${riskInfo.val >= 45 ? 'bg-amber-500' : 'bg-neutral-900 border border-neutral-800'}`} title="Riesgo Medio (26-50%)" />
-                  <div className={`rounded-sm transition-all ${riskInfo.val >= 70 ? 'bg-orange-500' : 'bg-neutral-900 border border-neutral-800'}`} title="Riesgo Alto (51-75%)" />
-                  <div className={`rounded-sm transition-all ${riskInfo.val >= 85 ? 'bg-red-600 shadow-md animate-pulse' : 'bg-neutral-900 border border-neutral-800'}`} title="Riesgo Crítico (76-100%)" />
+                  <div className={`rounded-sm transition-all ${riskInfo.val >= 20 ? 'bg-emerald-500' : 'bg-[#1c1e22] border border-[#383b43]'}`} title="Riesgo Bajo (0-25%)" />
+                  <div className={`rounded-sm transition-all ${riskInfo.val >= 45 ? 'bg-amber-500' : 'bg-[#1c1e22] border border-[#383b43]'}`} title="Riesgo Medio (26-50%)" />
+                  <div className={`rounded-sm transition-all ${riskInfo.val >= 70 ? 'bg-orange-500' : 'bg-[#1c1e22] border border-[#383b43]'}`} title="Riesgo Alto (51-75%)" />
+                  <div className={`rounded-sm transition-all ${riskInfo.val >= 85 ? 'bg-rose-600 shadow-md animate-pulse' : 'bg-[#1c1e22] border border-[#383b43]'}`} title="Riesgo Crítico (76-100%)" />
                 </div>
-                <div className="flex justify-between text-[9px] font-mono text-neutral-500 pt-0.5">
+                <div className="flex justify-between text-[10px] text-neutral-400 pt-0.5">
                   <span>Bajo</span>
                   <span>Medio</span>
                   <span>Alto</span>
                   <span>Crítico</span>
                 </div>
               </div>
-
-              {/* Graphic 2: 6-Month Projection Timeline Milestones */}
-              <div className="pt-2 border-t border-red-950/80">
-                <span className="text-[10px] uppercase font-mono tracking-wider text-neutral-400 block mb-2 font-bold flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-red-400" />
-                  Línea de Tiempo Proyectada a 6 Meses:
-                </span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 font-mono text-[10px]">
-                  <div className="p-2.5 rounded-lg bg-neutral-950 border border-red-950 flex flex-col justify-between">
-                    <div>
-                      <span className="text-red-400 font-bold block mb-1">MES 1 – 2 (Instalación)</span>
-                      <p className="text-neutral-300 font-sans text-[11px] leading-tight">
-                        Decretos ministeriales y conformación de mesas operativas de urgencia.
-                      </p>
-                    </div>
-                    <span className="text-[9px] text-emerald-400 mt-2 block">✓ Completada</span>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-neutral-950 border border-red-900/60 flex flex-col justify-between">
-                    <div>
-                      <span className="text-amber-400 font-bold block mb-1">MES 3 – 4 (Fricción / Trámite)</span>
-                      <p className="text-neutral-300 font-sans text-[11px] leading-tight">
-                        Control de legalidad en CGR, dictámenes y resistencia parlamentaria.
-                      </p>
-                    </div>
-                    <span className="text-[9px] text-amber-300 mt-2 block">⏳ En desarrollo</span>
-                  </div>
-
-                  <div className="p-2.5 rounded-lg bg-neutral-950 border border-red-500/50 flex flex-col justify-between">
-                    <div>
-                      <span className="text-red-400 font-bold block mb-1">MES 5 – 6 (Desenlace)</span>
-                      <p className="text-neutral-300 font-sans text-[11px] leading-tight">
-                        Impacto presupuestario en DIPRES y saturación de capacidades técnicas.
-                      </p>
-                    </div>
-                    <span className="text-[9px] text-red-400 mt-2 block">⚠️ Escenario crítico</span>
-                  </div>
-                </div>
-              </div>
-
             </div>
 
           </div>
         )}
 
         {/* ========================================================================= */}
-        {/* SLIDE 3: PUNTO 5 — VEREDICTO DE COHERENCIA HISTÓRICA (SOLAMENTE TEXTO)     */}
+        {/* SLIDE 3: VEREDICTO HISTÓRICO, VERSIONES PROGRAMÁTICAS Y TRANSPARENCIA     */}
         {/* ========================================================================= */}
         {activeSlide === 3 && (
           <div className="space-y-4 animate-fade-in-up">
             
             {/* Header info */}
-            <div className="flex items-center justify-between gap-2 pb-3 border-b border-red-950/80">
-              <div className="flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-black text-red-400 border border-red-500/60">
-                  <History className="w-4 h-4" />
+            <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#34373e]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                  <History className="w-5 h-5 text-blue-400" />
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-mono tracking-widest text-red-400 block font-bold">
-                    BLOQUE 4 · COHERENCIA HISTÓRICA & VEREDICTO DOCTRINARIO
+                  <span className="text-[11px] uppercase tracking-wider text-blue-400 block font-bold">
+                    BLOQUE 4 · VERIFICACIÓN HISTÓRICA Y TRANSPARENCIA
                   </span>
-                  <h3 className="text-sm sm:text-base font-bold text-white tracking-tight">
-                    5. Veredicto de Coherencia Histórica (2017 · 2021 · 2026)
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                    5. Contraste de Programas Originales (2017 · 2021 · 2026)
                   </h3>
                 </div>
               </div>
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-black text-white border border-red-500">
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-blue-950/80 text-blue-300 border border-blue-500/60">
                 {structured.verdict}
               </span>
             </div>
 
-            {/* STRICTLY TEXT ONLY: Clean journalistic typography, NO charts, NO graphs */}
-            <div className="bg-black/90 border border-red-950 rounded-xl p-4 sm:p-5 space-y-3.5 glow-card">
-              <div className="border-b border-red-950/80 pb-2.5 flex items-center justify-between">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-red-300 font-bold">
-                  Evolución Programática & Cotejo Transmedia:
+            {/* Historical Comparison Narrative */}
+            <div className="bg-[#26282e] border border-[#383b43] rounded-xl p-4 sm:p-5 space-y-3.5">
+              <div className="border-b border-[#383b43] pb-2 flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider text-blue-300 font-bold">
+                  Evolución Programática Documentada (Solo Programas Oficiales):
                 </span>
-                <span className="text-[10px] font-mono text-neutral-400">
-                  Archivo 2017 · 2021 · 2026
+                <span className="text-xs text-neutral-400">
+                  Archivo Servel / BCN 2017 · 2021 · 2026
                 </span>
               </div>
 
@@ -588,29 +713,30 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
                 {structured.historicalNarrative}
               </div>
 
-              {/* Textual comparison recap */}
-              <div className="pt-2 text-[11px] text-neutral-400 font-mono space-y-1 border-t border-red-950/60">
-                <p>
-                  <strong className="text-white">· Bases 2017: </strong>
-                  Propuestas de corte doctrinal de reducción radical del aparato estatal y orden público.
-                </p>
-                <p>
-                  <strong className="text-white">· Ajustes 2021: </strong>
-                  Moderación gradual y búsqueda de viabilidad legislativa ante coaliciones parlamentarias.
-                </p>
-                <p>
-                  <strong className="text-white">· Gestión 2026: </strong>
-                  Pragmatismo ejecutivo ajustado a restricciones del marco legal y holguras de caja de DIPRES.
-                </p>
-              </div>
+              {/* Transparency Report Box */}
+              {structured.transparencyReport && (
+                <div className="pt-3 text-xs text-neutral-300 space-y-1.5 border-t border-[#383b43]">
+                  <span className="text-[11px] font-bold uppercase text-amber-400 block">
+                    Transparencia de Investigación y Brechas Documentales (Consulta: {structured.transparencyReport.queryDate}):
+                  </span>
+                  <p>
+                    <strong className="text-white">Información no verificada: </strong>
+                    {structured.transparencyReport.unverifiedGaps}
+                  </p>
+                  <p>
+                    <strong className="text-white">Documento primario requerido para comprobación total: </strong>
+                    {structured.transparencyReport.requiredDocumentsForGap}
+                  </p>
+                </div>
+              )}
             </div>
 
-            {/* Textual Desfunding Warning Banner if active */}
+            {/* Desfunding Warning Banner if active */}
             {structured.defundingAlert && (
-              <div className="bg-black border border-red-500/70 rounded-xl p-3.5 sm:p-4 text-white shadow-lg space-y-1">
-                <div className="flex items-center gap-1.5 text-red-400 font-mono font-bold text-xs uppercase tracking-wider">
-                  <AlertTriangle className="w-4 h-4 text-red-400" />
-                  <span>Alerta de Desfinanciamiento (Análisis DIPRES / CFA)</span>
+              <div className="bg-[#26282e] border border-amber-500/60 rounded-xl p-3.5 sm:p-4 text-white shadow-md space-y-1">
+                <div className="flex items-center gap-1.5 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                  <AlertTriangle className="w-4 h-4 text-amber-400" />
+                  <span>Observación Presupuestaria (DIPRES / CFA)</span>
                 </div>
                 <p className="text-xs sm:text-sm text-neutral-200 leading-relaxed font-sans whitespace-pre-line">
                   {structured.defundingAlert}
@@ -621,17 +747,149 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
           </div>
         )}
 
+        {/* ========================================================================= */}
+        {/* SLIDE 4: CATÁLOGO DE REPORTAJES EN VIDEO VERIFICADOS (CONDENSADO EN 1 CARRO) */}
+        {/* ========================================================================= */}
+        {activeSlide === 4 && (
+          <div className="space-y-4 animate-fade-in-up">
+            
+            {/* Header info */}
+            <div className="flex items-center justify-between gap-2 pb-3 border-b border-[#34373e]/70">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                  <Tv className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                  <span className="text-[11px] uppercase tracking-wider text-blue-400 block font-bold">
+                    BLOQUE 5 · EVIDENCIA AUDIOVISUAL VERIFICADA
+                  </span>
+                  <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                    Catálogo de Reportajes en Video ({allVideos.length} reportajes vinculados)
+                  </h3>
+                </div>
+              </div>
+              <span className="text-xs bg-[#26282e] text-neutral-300 border border-[#383b43] px-2.5 py-1 rounded-md">
+                Prensa Chilena Verificada
+              </span>
+            </div>
+
+            {/* Videos Grid / List inside the Carousel Slide */}
+            {allVideos.length > 0 ? (
+              <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {allVideos.slice(0, 6).map((vid) => (
+                    <div
+                      key={vid.id}
+                      onClick={() => {
+                        playPinClick();
+                        setPlayingVideo(vid);
+                      }}
+                      className="group cursor-pointer rounded-xl bg-[#26282e] hover:bg-[#2d3037] border border-[#383b43] hover:border-blue-500/50 p-2.5 transition-all flex flex-col justify-between shadow-xs active:scale-[0.98]"
+                    >
+                      {/* Video Thumbnail Container */}
+                      <div className="relative aspect-video rounded-lg overflow-hidden bg-black mb-2 border border-[#383b43]/60 group-hover:border-blue-500/40 transition-colors">
+                        <img 
+                          src={`https://img.youtube.com/vi/${vid.youtubeVideoId}/mqdefault.jpg`}
+                          alt={vid.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-full bg-blue-600/90 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                            <Play className="w-4 h-4 ml-0.5 fill-current" />
+                          </div>
+                        </div>
+                        <div className="absolute bottom-1.5 right-1.5 bg-black/80 text-white text-[10px] font-mono px-1.5 py-0.5 rounded">
+                          {vid.duration}
+                        </div>
+                      </div>
+
+                      {/* Video Meta Info */}
+                      <div>
+                        <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 mb-1">
+                          <span className="font-semibold text-white">{vid.channel}</span>
+                          {vid.channelVerified && (
+                            <CheckCircle className="w-3 h-3 text-blue-400" />
+                          )}
+                          <span>·</span>
+                          <span>{vid.publishedDate}</span>
+                        </div>
+                        <h4 className="text-xs font-bold text-white group-hover:text-blue-300 line-clamp-2 leading-snug">
+                          {vid.title}
+                        </h4>
+                        <p className="text-[11px] text-neutral-400 line-clamp-2 mt-1 leading-relaxed">
+                          {vid.summary}
+                        </p>
+                      </div>
+
+                      <div className="mt-2.5 pt-2 border-t border-[#383b43]/60 flex items-center justify-between text-[11px] text-blue-400 font-medium">
+                        <span>Reproducir reporte</span>
+                        <Play className="w-3 h-3 fill-current" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#26282e] border border-[#383b43] rounded-xl p-8 text-center text-neutral-400">
+                <Tv className="w-8 h-8 mx-auto text-neutral-500 mb-2" />
+                <p className="text-sm">No hay videos indexados directamente para esta búsqueda.</p>
+              </div>
+            )}
+
+            {/* Embedded Active Video Player Modal */}
+            {playingVideo && (
+              <div 
+                className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5"
+                onClick={() => setPlayingVideo(null)}
+              >
+                <div 
+                  className="bg-[#202226] border border-[#383b43] rounded-2xl overflow-hidden max-w-3xl w-full shadow-2xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="p-3 bg-[#1c1e22] border-b border-[#383b43] flex items-center justify-between">
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="text-xs font-bold text-white truncate">{playingVideo.title}</span>
+                      <span className="text-xs text-neutral-400 shrink-0">({playingVideo.channel})</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setPlayingVideo(null)}
+                      className="text-neutral-400 hover:text-white p-1 rounded-lg hover:bg-[#2d3037] transition-colors cursor-pointer"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="aspect-video bg-black w-full">
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/${playingVideo.youtubeVideoId}?autoplay=1&rel=0`}
+                      title={playingVideo.title}
+                      className="w-full h-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                  <div className="p-3.5 bg-[#26282e] text-xs text-neutral-300 leading-relaxed">
+                    {playingVideo.summary}
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
+        )}
+
       </div>
 
       {/* Carousel Footer Toolbar with Quick Slide Step Navigator */}
-      <div className="px-3.5 sm:px-5 py-3 bg-black border-t border-red-950 flex flex-wrap items-center justify-between gap-2.5">
+      <div className="px-3.5 sm:px-5 py-3 bg-[#1c1e22] border-t border-[#34373e] flex flex-wrap items-center justify-between gap-2.5">
         
         {/* Next / Prev Quick Buttons */}
         <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={goToPrev}
-            className="px-3 py-1.5 rounded-lg bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-red-950 text-xs font-mono flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
+            className="px-3 py-1.5 rounded-lg bg-[#27292f] hover:bg-[#34373e] text-neutral-300 hover:text-white border border-[#383b43] text-xs font-medium flex items-center gap-1 transition-all active:scale-95 cursor-pointer font-sans"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Anterior</span>
@@ -639,7 +897,7 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
           <button
             type="button"
             onClick={goToNext}
-            className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white border border-red-500 text-xs font-mono font-bold flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-md"
+            className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-1 transition-all active:scale-95 cursor-pointer shadow-sm font-sans"
           >
             <span>{activeSlide === totalSlides - 1 ? 'Volver al inicio' : 'Siguiente bloque'}</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -656,8 +914,8 @@ export const AuditorCarousel: React.FC<AuditorCarouselProps> = ({
               aria-label={`Ir al bloque ${dotIdx + 1}`}
               className={`h-1.5 rounded-full transition-all cursor-pointer ${
                 activeSlide === dotIdx
-                  ? 'w-6 bg-red-500'
-                  : 'w-2 bg-neutral-800 hover:bg-neutral-600'
+                  ? 'w-6 bg-blue-500'
+                  : 'w-2 bg-[#383b43] hover:bg-neutral-500'
               }`}
             />
           ))}

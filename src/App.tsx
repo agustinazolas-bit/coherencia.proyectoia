@@ -3,246 +3,200 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from './components/Header';
-import { HeroSearch } from './components/HeroSearch';
-import { UpdatesColumn } from './components/UpdatesColumn';
-import { AiResponseCard } from './components/AiResponseCard';
-import { ComplianceCard } from './components/ComplianceCard';
-import { SourcesColumn } from './components/SourcesColumn';
 import { Modals } from './components/Modals';
-import { CommitmentsModal } from './components/CommitmentsModal';
-import { DetectiveBoardBackground } from './components/DetectiveBoardBackground';
-import { Download, Layers } from 'lucide-react';
-import { initialAuditData, allRepositoryDocuments, allVerifiedSourcesData, authentic100DaysCommitments } from './data/mockData';
-import { AuditState, DataUpdate, VerifiedSource, GovernmentCommitment } from './types';
+import { ScrapingMonitorModal } from './components/ScrapingMonitorModal';
+import { ChatPanel } from './components/ChatPanel';
+import { Download } from 'lucide-react';
+import { allRepositoryDocuments, allVerifiedSourcesData } from './data/mockData';
+import { DataUpdate, ChatMessage } from './types';
 import { playPaperSlide, playPinClick } from './utils/audio';
 
 export default function App() {
-  const [auditData, setAuditData] = useState<AuditState>(initialAuditData);
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'inicio' | 'metodologia' | 'repositorio' | 'acerca'>('inicio');
+  const [activeTab, setActiveTab] = useState<'inicio' | 'fuentes' | 'metodologia' | 'acerca'>('inicio');
   const [activeModal, setActiveModal] = useState<'metodologia' | 'repositorio' | 'fuentes' | 'acerca' | 'share' | 'wordpress' | 'docDetail' | null>(null);
-  const [isCommitmentsModalOpen, setIsCommitmentsModalOpen] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<DataUpdate | null>(null);
-  const [selectedSource, setSelectedSource] = useState<VerifiedSource | null>(null);
-  const [darkMode, setDarkMode] = useState(true);
+  const [isScrapingModalOpen, setIsScrapingModalOpen] = useState(false);
+  const [selectedDoc] = useState<DataUpdate | null>(null);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('coherencia_theme') === 'dark';
+    } catch {
+      return false;
+    }
+  });
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
-  // Fetch baseline or update on mount if available
+  // Sync dark mode class on <html> and persist preference
   useEffect(() => {
-    fetch('/api/baseline')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.aiResponse) {
-          setAuditData((prev) => ({
-            ...prev,
-            ...data,
-          }));
-        }
-      })
-      .catch((err) => {
-        console.warn('Using initial local state:', err);
-      });
-  }, []);
+    document.documentElement.classList.toggle('dark', darkMode);
+    try {
+      localStorage.setItem('coherencia_theme', darkMode ? 'dark' : 'light');
+    } catch {
+      // Ignore storage errors
+    }
+  }, [darkMode]);
 
-  // Main search / AI audit handler
-  const handleSearch = async (query: string) => {
-    if (!query.trim()) return;
-    setIsLoading(true);
+  const activeTopic = useMemo(() => {
+    const userTurns = chatMessages.filter((m) => m.role === 'user');
+    if (userTurns.length === 0) return undefined;
+    const latest = userTurns[0].content.trim();
+    return latest.length > 56 ? `${latest.slice(0, 56)}…` : latest;
+  }, [chatMessages]);
+
+  const handleSendChatMessage = async (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed || isChatLoading) return;
+
+    const timestamp = new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      role: 'user',
+      content: trimmed,
+      timestamp,
+    };
+
+    const previousUserMsg = [...chatMessages].reverse().find((m) => m.role === 'user');
+    const previousAssistantMsg = [...chatMessages].reverse().find((m) => m.role === 'assistant');
+
+    const nextHistory = [...chatMessages, userMessage];
+    setChatMessages(nextHistory);
+    setIsChatLoading(true);
 
     try {
-      const response = await fetch('/api/audit', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({
+          message: trimmed,
+          history: chatMessages.map((m) => ({ role: m.role, content: m.content })),
+          auditContext: previousUserMsg
+            ? {
+                query: previousUserMsg.content,
+                evidenceClassification: previousAssistantMsg?.evidenceClassification,
+              }
+            : undefined,
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const payload = await response.json();
+      if (!response.ok || !payload?.success || !payload?.reply) {
+        const errMsg = payload?.error || `Error HTTP ${response.status} al consultar el motor documental.`;
+        setChatMessages((prev) => [
+          ...prev,
+          {
+            id: `err-${Date.now()}`,
+            role: 'assistant',
+            content: '',
+            timestamp: new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
+            evidenceClassification: 'NO VERIFICADA',
+            citations: Array.isArray(payload?.citations) ? payload.citations : [],
+            errorMessage: errMsg,
+          },
+        ]);
+        return;
       }
 
-      const result = await response.json();
-      if (result && result.data) {
-        setAuditData({
-          query: result.query || query,
-          aiResponse: result.data.aiResponse || auditData.aiResponse,
-          complianceStatus: result.data.complianceStatus || auditData.complianceStatus,
-          updates: result.data.updates || auditData.updates,
-          verifiedSources: result.data.verifiedSources || auditData.verifiedSources,
-          totalIndexedDocs: result.data.totalIndexedDocs || auditData.totalIndexedDocs,
-          totalVerifiedSources: result.data.totalVerifiedSources || auditData.totalVerifiedSources
-        });
-      }
-    } catch (error) {
-      console.error('Error querying AI audit engine:', error);
-      // Fallback local dynamic response if network/server is interrupted
-      setAuditData((prev) => ({
+      setChatMessages((prev) => [...prev, payload.reply as ChatMessage]);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error de red al conectar con el servidor de verificación.';
+      setChatMessages((prev) => [
         ...prev,
-        query,
-        aiResponse: {
-          title: "RESPUESTA DE LA IA (análisis prospectivo)",
-          content: `Según el análisis de los decretos publicados en el Diario Oficial para "${query}", se registra un avance proporcional en el vector de datos con coherencia programática verificada y trazabilidad en los informes presupuestarios.`,
-          coherenceMetric: {
-            status: "Cumpliéndose",
-            statusColor: "green",
-            detail: "Verificado contra vector de datos del Diario Oficial y balance fiscal."
-          },
-          newsVideos: initialAuditData.aiResponse.newsVideos
-        }
-      }));
+        {
+          id: `err-${Date.now()}`,
+          role: 'assistant',
+          content: '',
+          timestamp: new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
+          evidenceClassification: 'NO VERIFICADA',
+          errorMessage: message,
+        },
+      ]);
     } finally {
-      setIsLoading(false);
+      setIsChatLoading(false);
     }
   };
 
-  const handleTabSelect = (tab: 'inicio' | 'metodologia' | 'repositorio' | 'acerca') => {
+  const handleClearChat = () => {
+    setChatMessages([]);
+  };
+
+  const handleTabSelect = (tab: 'inicio' | 'fuentes' | 'metodologia' | 'acerca') => {
     playPaperSlide();
     setActiveTab(tab);
-    if (tab === 'metodologia') {
+    if (tab === 'inicio') {
+      setActiveModal(null);
+      setIsScrapingModalOpen(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (tab === 'fuentes') {
+      setIsScrapingModalOpen(true);
+    } else if (tab === 'metodologia') {
       setActiveModal('metodologia');
-    } else if (tab === 'repositorio') {
-      setActiveModal('repositorio');
     } else if (tab === 'acerca') {
       setActiveModal('acerca');
     }
   };
 
-  const handleDocSelect = (doc: DataUpdate) => {
-    playPaperSlide();
-    setSelectedDoc(doc);
-    setActiveModal('docDetail');
-  };
-
-  const handleSourceSelect = (source: VerifiedSource) => {
-    playPaperSlide();
-    setSelectedSource(source);
-    setActiveModal('fuentes');
-  };
-
-  const handleDocAudit = (doc: DataUpdate) => {
+  const handleDocAuditInChat = (doc: DataUpdate) => {
     playPinClick();
-    const query = `Auditoría sobre ${doc.type} ${doc.title}: ${doc.summary}`;
-    handleSearch(query);
-  };
-
-  const handleResetResponse = () => {
-    playPinClick();
-    setAuditData(initialAuditData);
+    setActiveModal(null);
+    setActiveTab('inicio');
+    handleSendChatMessage(`¿Qué antecedentes oficiales respaldan ${doc.type} (${doc.title})?`);
   };
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-black text-white' : 'bg-neutral-950 text-neutral-100'} font-sans antialiased flex flex-col justify-between selection:bg-red-600 selection:text-white relative overflow-x-hidden transition-colors duration-500`}>
-      
-      {/* Detective Investigation Corkboard Background with Pinned Notes and Red Strings */}
-      <DetectiveBoardBackground darkMode={darkMode} opacity={darkMode ? 0.32 : 0.22} />
-
-      {/* Noir ambient red glows */}
-      <div className={`fixed top-0 left-1/4 w-96 h-96 ${darkMode ? 'bg-red-600/10' : 'bg-red-500/15'} rounded-full blur-[140px] pointer-events-none z-0 transition-all duration-500`}></div>
-      <div className={`fixed bottom-0 right-1/4 w-96 h-96 ${darkMode ? 'bg-red-950/20' : 'bg-rose-950/25'} rounded-full blur-[140px] pointer-events-none z-0 transition-all duration-500`}></div>
-
-      {/* Header with "Comparativas Dinámicas" navigation */}
+    <div className="min-h-screen text-[#363d47] dark:text-slate-100 font-sans antialiased flex flex-col justify-between selection:bg-[#32b8f2] selection:text-white relative overflow-x-hidden transition-colors">
+      {/* Header Navigation */}
       <Header
         activeTab={activeTab}
         onSelectTab={handleTabSelect}
         onOpenShare={() => setActiveModal('share')}
-        onOpenComparativas={() => setIsCommitmentsModalOpen(true)}
         darkMode={darkMode}
         onToggleTheme={() => setDarkMode(!darkMode)}
       />
 
-      {/* Main Container */}
-      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 flex-1 relative z-10">
-        {/* Hero & Search Bar */}
-        <HeroSearch
-          onSearch={handleSearch}
-          isLoading={isLoading}
-          currentQuery={auditData.query}
+      {/* Primary Chat-First Workspace */}
+      <main className="w-full max-w-5xl mx-auto px-3 sm:px-6 py-4 flex-1 flex flex-col relative z-10">
+        <ChatPanel
+          fullPageMode={true}
+          messages={chatMessages}
+          isLoading={isChatLoading}
+          activeTopic={activeTopic}
+          onSendMessage={handleSendChatMessage}
+          onClearChat={handleClearChat}
+          onOpenSourcesModal={() => setActiveModal('fuentes')}
+          onOpenScrapingModal={() => setIsScrapingModalOpen(true)}
         />
-
-        {/* Top Full-Width Auditor + Bottom 2-Column Grid */}
-        <div className="space-y-6 mt-3">
-          
-          {/* Top Section: EL AUDITOR & ESTADO DE CUMPLIMIENTO */}
-          <div className="space-y-5">
-            <AiResponseCard
-              data={auditData.aiResponse}
-              isLoading={isLoading}
-              onReset={handleResetResponse}
-              onFollowUpQuery={handleSearch}
-            />
-
-            <ComplianceCard
-              compliance={auditData.complianceStatus}
-              onOpenCommitmentsModal={() => setIsCommitmentsModalOpen(true)}
-            />
-          </div>
-
-          {/* Bottom Section: 2 Columns on Web (Left: Últimas actualizaciones | Right: Fuentes verificadas) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-            
-            {/* Left Column: ÚLTIMAS ACTUALIZACIONES */}
-            <div className="h-full">
-              <UpdatesColumn
-                updates={auditData.updates}
-                totalIndexedDocs={auditData.totalIndexedDocs}
-                onOpenRepository={() => setActiveModal('repositorio')}
-                onSelectDocument={handleDocSelect}
-              />
-            </div>
-
-            {/* Right Column: FUENTES VERIFICADAS */}
-            <div className="h-full">
-              <SourcesColumn
-                sources={auditData.verifiedSources}
-                totalSources={auditData.totalVerifiedSources}
-                onOpenAllSources={() => setActiveModal('fuentes')}
-                onSelectSource={handleSourceSelect}
-              />
-            </div>
-
-          </div>
-
-        </div>
       </main>
 
-      {/* Footer with WordPress Export and Comparativas Dinámicas */}
-      <footer className="w-full border-t border-red-950/80 bg-black/95 py-6 px-4 text-center text-xs text-neutral-400 relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      {/* Footer with Nintendo Wii Cyan Rim & Chrome Capsules */}
+      <footer className="w-full border-t-2 border-[#94d8f8] dark:border-[#0284c7]/70 bg-gradient-to-b from-[#f6f9fc] to-[#e6ecf3] dark:from-[#161c26] dark:to-[#10151d] py-4 px-4 text-center text-xs text-[#5d6876] dark:text-slate-400 relative z-10 font-sans shadow-[0_-6px_20px_rgba(66,82,102,0.06)] dark:shadow-[0_-6px_24px_rgba(0,0,0,0.35)]">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-center md:text-left justify-center">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0"></span>
-            <span className="text-neutral-300 font-medium">
-              <strong className="text-white font-mono">COHERENC<span className="text-red-500">.IA</span></strong> · Auditoría y fact-checking gubernamental (Período: 11 mar - 19 jun 2026)
+            <span className="w-2.5 h-2.5 rounded-full bg-[#32b8f2] shadow-[0_0_8px_rgba(50,184,242,0.75)] shrink-0"></span>
+            <span className="text-[#4b5563] dark:text-slate-300 font-medium">
+              <strong className="text-[#363d47] dark:text-white font-sans">COHERENC<span className="text-[#009ee3] dark:text-[#38bdf8]">.IA</span></strong> · Fact-checking conversacional con fuentes verificables (11 mar – 19 jun 2026)
             </span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-4 text-neutral-300 flex-wrap justify-center font-mono">
-            {/* Comparativas Dinámicas Footer Link */}
-            <button 
-              onClick={() => setIsCommitmentsModalOpen(true)} 
-              className="min-h-[40px] px-2.5 py-1.5 hover:text-red-300 transition-colors cursor-pointer flex items-center gap-1.5 font-medium text-red-400 active:scale-95"
-            >
-              <Layers className="w-3.5 h-3.5 text-red-400" />
-              <span>Comparativas Dinámicas</span>
-            </button>
-
-            {/* Traspaso WordPress Button */}
-            <button 
+          <div className="flex items-center gap-2 sm:gap-3 text-[#4b5563] dark:text-slate-300 flex-wrap justify-center font-sans">
+            <button
               id="btn-footer-wordpress-export"
-              onClick={() => setActiveModal('wordpress')} 
-              className="min-h-[40px] hover:text-white transition-all text-red-300 hover:bg-red-900/60 font-semibold cursor-pointer bg-red-950/70 border border-red-800/80 px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-sm active:scale-95"
+              onClick={() => setActiveModal('wordpress')}
+              className="min-h-[38px] font-semibold cursor-pointer wii-pill-btn px-3.5 py-1.5 rounded-full flex items-center gap-2 active:scale-95"
               title="Descargar Tema o Plugin Universal para cualquier sitio WordPress"
             >
-              <Download className="w-3.5 h-3.5 text-red-400" />
-              <span>Traspaso WordPress (v2.0)</span>
+              <Download className="w-3.5 h-3.5 text-[#009ee3] dark:text-[#38bdf8]" />
+              <span>Traspaso WordPress</span>
             </button>
 
-            <button onClick={() => setActiveModal('metodologia')} className="min-h-[40px] px-2 py-1.5 hover:text-red-400 transition-colors cursor-pointer">
+            <button onClick={() => setActiveModal('metodologia')} className="min-h-[38px] px-2.5 py-1.5 hover:text-[#0095d9] dark:hover:text-[#38bdf8] font-medium transition-colors cursor-pointer">
               Metodología
             </button>
-            <button onClick={() => setActiveModal('repositorio')} className="min-h-[40px] px-2 py-1.5 hover:text-red-400 transition-colors cursor-pointer">
+            <button onClick={() => setActiveModal('repositorio')} className="min-h-[38px] px-2.5 py-1.5 hover:text-[#0095d9] dark:hover:text-[#38bdf8] font-medium transition-colors cursor-pointer">
               Repositorio
             </button>
-            <button onClick={() => setActiveModal('acerca')} className="min-h-[40px] px-2 py-1.5 hover:text-red-400 transition-colors cursor-pointer">
+            <button onClick={() => setActiveModal('acerca')} className="min-h-[38px] px-2.5 py-1.5 hover:text-[#0095d9] dark:hover:text-[#38bdf8] font-medium transition-colors cursor-pointer">
               Acerca de
             </button>
           </div>
@@ -253,28 +207,27 @@ export default function App() {
       <Modals
         activeModal={activeModal}
         selectedDoc={selectedDoc}
-        selectedSource={selectedSource}
+        selectedSource={null}
         allDocs={allRepositoryDocuments}
         allSources={allVerifiedSourcesData}
         onClose={() => {
           setActiveModal(null);
           setActiveTab('inicio');
         }}
-        onSelectDocAndAudit={handleDocAudit}
+        onSelectDocAndAudit={handleDocAuditInChat}
       />
 
-      {/* Comparativas Dinámicas (14 Medidas / 100 Días) Modal */}
-      <CommitmentsModal
-        isOpen={isCommitmentsModalOpen}
-        onClose={() => setIsCommitmentsModalOpen(false)}
-        commitments={auditData.complianceStatus.commitments || authentic100DaysCommitments}
-        onAuditCommitment={(comm) => {
-          setIsCommitmentsModalOpen(false);
-          handleSearch(`Auditar cumplimiento del compromiso: ${comm.title} (${comm.officialDocRef})`);
+      {/* Sistema de Scraping en Vivo (9 Fuentes de Información) */}
+      <ScrapingMonitorModal
+        isOpen={isScrapingModalOpen}
+        onClose={() => {
+          setIsScrapingModalOpen(false);
+          setActiveTab('inicio');
         }}
-        onSelectCommitmentAndAudit={(comm) => {
-          setIsCommitmentsModalOpen(false);
-          handleSearch(`Auditar cumplimiento del compromiso: ${comm.title} (${comm.officialDocRef})`);
+        onAuditDocument={(query) => {
+          setIsScrapingModalOpen(false);
+          setActiveTab('inicio');
+          handleSendChatMessage(query);
         }}
       />
     </div>

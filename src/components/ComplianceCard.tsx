@@ -47,33 +47,33 @@ export const ComplianceCard: React.FC<ComplianceCardProps> = ({
   return (
     <div 
       id="card-compliance-status"
-      className="bg-black/92 rounded-2xl border border-red-950 p-4 sm:p-5 shadow-2xl backdrop-blur-md flex flex-col justify-between animate-fade-in-up delay-100 glow-card"
+      className="bg-[#202226] rounded-2xl border border-[#34373e] p-4 sm:p-5 shadow-lg flex flex-col justify-between animate-fade-in-up delay-100 font-sans"
     >
       <div>
         {/* Header */}
-        <div className="border-b border-red-950 pb-2.5 mb-3 flex items-start justify-between">
+        <div className="border-b border-[#34373e]/70 pb-2.5 mb-3 flex items-start justify-between">
           <div>
-            <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-red-400 font-mono">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-white font-sans">
               ESTADO DE CUMPLIMIENTO
             </h2>
-            <p className="text-xs text-neutral-400 font-normal mt-0.5">
+            <p className="text-xs text-neutral-400 font-normal mt-0.5 font-sans">
               (fact-checking · 100 días de gobierno)
             </p>
           </div>
-          <span className="text-[10px] font-mono bg-neutral-950 border border-red-900/80 text-red-300 px-2 py-0.5 rounded-md">
+          <span className="text-xs bg-[#26282e] border border-[#383b43] text-neutral-300 px-2.5 py-0.5 rounded-md font-sans">
             11 mar – 19 jun 2026
           </span>
         </div>
 
         {/* Headline percentage badge */}
-        <div className="flex items-center justify-between gap-2 mb-3.5 bg-neutral-950/90 border border-red-900/70 rounded-xl px-3 py-2.5">
+        <div className="flex items-center justify-between gap-2 mb-3.5 bg-[#26282e] border border-[#383b43] rounded-xl px-3 py-2.5">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm shadow-red-500/50 shrink-0"></span>
-            <span className="text-xs sm:text-sm font-bold text-white tracking-wide">
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-xs shadow-blue-500/50 shrink-0"></span>
+            <span className="text-xs sm:text-sm font-bold text-white tracking-wide font-sans">
               {compliance.headline}
             </span>
           </div>
-          <span className="text-[10px] sm:text-xs font-mono text-red-400/80 shrink-0">
+          <span className="text-xs text-neutral-400 shrink-0 font-sans">
             {compliance.daysEvaluated || 100} días auditados
           </span>
         </div>
@@ -163,17 +163,17 @@ export const ComplianceCard: React.FC<ComplianceCardProps> = ({
 
         {/* Action button to open Comparativas Dinámicas */}
         {onOpenCommitmentsModal && (
-          <div className="mt-4 pt-3 border-t border-red-950">
+          <div className="mt-4 pt-3 border-t border-[#34373e]/70">
             <button
               type="button"
               onClick={handleOpenModal}
-              className="w-full min-h-[44px] py-2.5 px-3.5 rounded-xl bg-red-950/70 hover:bg-red-900/80 border border-red-800/80 text-red-300 hover:text-white text-xs font-semibold flex items-center justify-between transition-all group cursor-pointer shadow-sm active:scale-[0.98] font-mono"
+              className="w-full min-h-[40px] py-2 px-3.5 rounded-xl bg-[#26282e] hover:bg-[#2d3037] border border-[#383b43] hover:border-blue-500/60 text-neutral-200 hover:text-white text-xs font-semibold flex items-center justify-between transition-all group cursor-pointer shadow-xs active:scale-[0.98] font-sans"
             >
               <div className="flex items-center gap-2">
-                <Layers className="w-4 h-4 text-red-400" />
+                <Layers className="w-4 h-4 text-blue-400" />
                 <span>Explorar Comparativas Dinámicas (14 Medidas)</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-red-400 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-4 h-4 text-blue-400 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         )}

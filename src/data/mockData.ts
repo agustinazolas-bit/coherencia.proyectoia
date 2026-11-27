@@ -279,146 +279,159 @@ export const verifiedNewsVideosData: NewsVideoReport[] = [
 export const authentic100DaysCommitments: GovernmentCommitment[] = [
   {
     id: "com-1",
-    title: "Despliegue militar ampliado en infraestructura crítica fronteriza",
+    title: "Despliegue militar y prórroga en infraestructura crítica fronteriza",
     area: "Seguridad y Fronteras",
     status: "CUMPLIDA",
     executionPct: 100,
-    officialDocRef: "D.S. N° 142 · Ministerio de Defensa Nacional",
-    datePromulgated: "15 abr 2026",
-    summary: "Prórroga y facultades extraordinarias al Ejército para control de identidad y registros en pasos no habilitados de Tarapacá y Antofagasta.",
-    evidenceSource: "Diario Oficial de Chile (15/04/2026)"
+    officialDocRef: "D.S. N° 76 (Interior) · idNorma 1223930",
+    docUrl: "https://www.bcn.cl/leychile/navegar?idNorma=1223930",
+    datePromulgated: "08 may 2026",
+    summary: "Decreto Supremo promulgado el 06/05/2026 y publicado el 08/05/2026 que modifica el D.S. N° 78/2023 y prorroga la vigencia del resguardo en zonas fronterizas.",
+    evidenceSource: "BCN Ley Chile / Ministerio del Interior (D.S. N° 76/2026)"
   },
   {
     id: "com-2",
-    title: "Creación del Comité Operativo de Crisis de Seguridad Pública e Inmigración",
+    title: "Incorporación constitucional de Gendarmería a las Fuerzas de Orden y Seguridad",
     area: "Seguridad y Fronteras",
     status: "CUMPLIDA",
     executionPct: 100,
-    officialDocRef: "D.S. N° 95 · Ministerio del Interior y Seguridad Pública",
-    datePromulgated: "18 mar 2026",
-    summary: "Mesa unificada de mando entre Carabineros, PDI, Estado Mayor Conjunto y directores regionales de aduanas.",
-    evidenceSource: "Ministerio del Interior (18/03/2026)"
+    officialDocRef: "Ley N° 21.810 (Boletín N° 18.032-07) · idNorma 1223237",
+    docUrl: "https://www.bcn.cl/leychile/Navegar?idNorma=1223237",
+    datePromulgated: "16 abr 2026",
+    summary: "Reforma constitucional promulgada el 09/04/2026 y publicada el 16/04/2026 que incorpora a Gendarmería de Chile dentro de las Fuerzas de Orden y Seguridad Pública.",
+    evidenceSource: "BCN Ley Chile (Ley N° 21.810)"
   },
   {
     id: "com-3",
-    title: "Proyecto de Ley de Emergencia en Seguridad y Atribuciones en Flagrancia",
+    title: "Ley de Ampliación del Plazo de Flagrancia (24 horas)",
     area: "Seguridad y Fronteras",
-    status: "EN CURSO",
-    executionPct: 65,
-    officialDocRef: "Boletín N° 16.912-07 · Congreso Nacional",
-    datePromulgated: "28 mar 2026",
-    summary: "Aprobado en primer trámite por la Comisión de Seguridad de la Cámara de Diputados; pendiente de votación en Sala.",
-    evidenceSource: "Cámara de Diputadas y Diputados (28/03/2026)"
+    status: "CUMPLIDA",
+    executionPct: 100,
+    officialDocRef: "Ley N° 21.845 (Boletín N° 16.481-25) · idNorma 1228990",
+    docUrl: "https://www.bcn.cl/leychile/Navegar?idNorma=1228990",
+    datePromulgated: "10 oct 2026",
+    summary: "Modificación promulgada al Código Procesal Penal que amplía el plazo máximo de flagrancia a 24 horas y fortalece facultades investigativas.",
+    evidenceSource: "BCN Ley Chile / Senado (Ley N° 21.845)"
   },
   {
     id: "com-4",
-    title: "Zanja de contención profunda y muro perimetral en macrozona norte",
+    title: "Resguardo fronterizo y obras de contención bajo marco de Infraestructura Crítica",
     area: "Seguridad y Fronteras",
     status: "BLOQUEADA",
     executionPct: 20,
-    officialDocRef: "Oficio Ord. N° 1.204 · Servicio de Evaluación Ambiental",
-    datePromulgated: "10 may 2026",
-    summary: "Paralizada temporalmente por requerimiento de Estudio de Impacto Ambiental y consulta sobre acuerdos limítrofes bilaterales.",
-    evidenceSource: "SEA / Dirección Nacional de Fronteras y Límites"
+    officialDocRef: "Ley N° 21.542 (Infraestructura Crítica) · idNorma 1188583",
+    docUrl: "https://www.bcn.cl/leychile/Navegar?idNorma=1188583",
+    datePromulgated: "03 feb 2023",
+    summary: "Obras fronterizas sujetas a evaluación ambiental, consulta sobre acuerdos limítrofes bilaterales y límites constitucionales de la Ley N° 21.542.",
+    evidenceSource: "BCN Ley Chile / Ley N° 21.542"
   },
   {
     id: "com-5",
-    title: "Reconducción inmediata del 100% de inmigrantes en condición irregular",
+    title: "Reconducción inmediata de migrantes en condición irregular",
     area: "Seguridad y Fronteras",
     status: "INCUMPLIDA",
     executionPct: 42,
-    officialDocRef: "Informe Estadístico Fronterizo Q1 · Carabineros & PDI",
-    datePromulgated: "30 may 2026",
-    summary: "Tasa efectiva de reconducción de 42.8% debido a la falta de protocolos de recepción formal por autoridades del país vecino.",
-    evidenceSource: "Jefatura Nacional de Migraciones PDI"
+    officialDocRef: "Ley N° 21.325 de Migración y Extranjería · idNorma 1158549",
+    docUrl: "https://www.bcn.cl/leychile/Navegar?idNorma=1158549",
+    datePromulgated: "20 abr 2021",
+    summary: "La ejecución de reconducciones inmediatas está condicionada por la recepción formal de autoridades de países vecinos conforme a la Ley N° 21.325.",
+    evidenceSource: "BCN Ley Chile / Ley N° 21.325"
   },
   {
     id: "com-6",
-    title: "Proyecto de Reforma Tributaria y rebaja de impuesto corporativo al 23%",
+    title: "Ley de Reconstrucción Nacional y Desarrollo Económico y Social (eje tributario)",
     area: "Economía e Impuestos",
-    status: "EN CURSO",
-    executionPct: 60,
-    officialDocRef: "Boletín N° 16.890-05 · Ministerio de Hacienda",
-    datePromulgated: "02 abr 2026",
-    summary: "Mensaje Presidencial ingresado con urgencia simple. En debate técnico en la Comisión de Hacienda de la Cámara de Diputados.",
-    evidenceSource: "Cámara de Diputados / Ministerio de Hacienda"
+    status: "CUMPLIDA",
+    executionPct: 100,
+    officialDocRef: "Ley N° 21.850 (Boletín N° 18.216-05) · idNorma 1229250",
+    docUrl: "https://www.bcn.cl/leychile/navegar?idNorma=1229250",
+    datePromulgated: "17 oct 2026",
+    summary: "Mensaje Presidencial ingresado el 22/04/2026, promulgado el 09/10/2026 y publicado el 17/10/2026 como Ley N° 21.850.",
+    evidenceSource: "BCN Ley Chile / Ministerio de Hacienda (Ley N° 21.850)"
   },
   {
     id: "com-7",
-    title: "Exención de contribuciones a la primera vivienda habitacional",
+    title: "Medidas habitacionales, subsidio a tasas hipotecarias UF 6.000 e impuesto territorial",
     area: "Economía e Impuestos",
     status: "EN CURSO",
     executionPct: 45,
-    officialDocRef: "Indicación al Boletín N° 16.890-05",
-    datePromulgated: "14 abr 2026",
-    summary: "En revisión por la Asociación Chilena de Municipalidades (AChM) para calibrar el impacto en el Fondo Común Municipal.",
-    evidenceSource: "DIPRES / AChM"
+    officialDocRef: "Ley N° 21.850 & Cobertura Económica 2026",
+    docUrl: "https://www.biobiochile.cl/noticias/economia/actualidad-economica/2026/08/05/demasiado-lo-claro-y-las-dudas-del-proyecto-de-subsidiar-tasas-para-viviendas-de-hasta-uf-6-000.shtml",
+    datePromulgated: "05 ago 2026",
+    summary: "Debate fiscal sobre compensaciones municipales, alcance del subsidio a tasas hipotecarias hasta 6.000 UF y alertas del CFA.",
+    evidenceSource: "BioBioChile / Ministerio de Hacienda"
   },
   {
     id: "com-8",
-    title: "Plan de contención de gasto público y auditoría a traspasos",
+    title: "Plan de contención de gasto público y seguimiento fiscal trimestral DIPRES",
     area: "Economía e Impuestos",
     status: "CUMPLIDA",
     executionPct: 90,
-    officialDocRef: "Oficio Circular N° 12 · Ministerio de Hacienda",
-    datePromulgated: "22 mar 2026",
-    summary: "Instrucciones de austeridad fiscal y revisión de convenios con corporaciones y fundaciones privadas.",
-    evidenceSource: "DIPRES (22/03/2026)"
+    officialDocRef: "IFP 1T 2026 · DIPRES (articles-413367_Informe_PDF.pdf)",
+    docUrl: "https://www.dipres.gob.cl/598/articles-413367_Informe_PDF.pdf",
+    datePromulgated: "25 may 2026",
+    summary: "Evaluación oficial del escenario fiscal y proyecciones de contención del gasto en el Informe de Finanzas Públicas del 1T 2026.",
+    evidenceSource: "DIPRES · Informe de Finanzas Públicas 1T 2026"
   },
   {
     id: "com-9",
-    title: "Congelamiento de contrataciones y honorarios en administración central",
+    title: "Instructivos iniciales de rebaja de gasto fiscal y auditoría en ministerios",
     area: "Reforma del Estado",
     status: "CUMPLIDA",
     executionPct: 100,
-    officialDocRef: "D.S. N° 88 · Ministerio de Hacienda",
+    officialDocRef: "Ejecución Presupuestaria 2026 · DIPRES / BioBioChile",
+    docUrl: "https://www.dipres.gob.cl/597/articles-412831_doc_pdf.pdf",
     datePromulgated: "20 mar 2026",
-    summary: "Restricción de nuevas incorporaciones y revisión de renovaciones de contratas ministeriales.",
-    evidenceSource: "Diario Oficial (20/03/2026)"
+    summary: "Directrices iniciales de contención de gasto operativo en ministerios y seguimiento mediante informes de ejecución presupuestaria DIPRES.",
+    evidenceSource: "DIPRES (articles-412831_doc_pdf.pdf)"
   },
   {
     id: "com-10",
-    title: "Fusión y supresión de ministerios por decreto reglamentario",
+    title: "Fusión y supresión de ministerios o SEREMIs por decreto reglamentario",
     area: "Reforma del Estado",
     status: "BLOQUEADA",
     executionPct: 15,
-    officialDocRef: "Dictamen N° E51022 · Contraloría General de la República",
-    datePromulgated: "17 mar 2026",
-    summary: "Contraloría dictaminó que la alteración de ministerios y servicios públicos requiere tramitación de ley formal en el Congreso.",
-    evidenceSource: "Contraloría General de la República (17/03/2026)"
+    officialDocRef: "Ley N° 18.575 (LOC Bases Generales) · idNorma 29967",
+    docUrl: "https://www.bcn.cl/leychile/Navegar?idNorma=29967",
+    datePromulgated: "05 dic 1986",
+    summary: "Conforme al marco orgánico de la Ley N° 18.575, la creación, fusión o supresión de ministerios y SEREMIs requiere ley formal en el Congreso Nacional.",
+    evidenceSource: "BCN Ley Chile (Ley N° 18.575)"
   },
   {
     id: "com-11",
-    title: "Convenio ampliado con prestadores privados para listas de espera Fonasa",
+    title: "Sistema de Acceso Priorizado (SAP) FONASA y convenios para listas de espera",
     area: "Salud y Listas de Espera",
     status: "CUMPLIDA",
     executionPct: 85,
-    officialDocRef: "Resolución Exenta N° 314 · FONASA / Minsal",
-    datePromulgated: "29 mar 2026",
-    summary: "Habilitación de compras de servicios en clínicas privadas con arancel Fonasa preferente para cirugías con mora superior a 12 meses.",
-    evidenceSource: "Fondo Nacional de Salud (FONASA)"
+    officialDocRef: "Ley N° 21.736 (SAP FONASA) · Ficha Legislativa BCN",
+    docUrl: "https://www.bcn.cl/balance-legislativo/detalle/ficha_LEY_21736_2025-04-11",
+    datePromulgated: "11 abr 2025",
+    summary: "Implementación en 2026 del Sistema de Acceso Priorizado (SAP) de Fonasa para reducir tiempos de espera quirúrgica mediante convenios con prestadores.",
+    evidenceSource: "BCN Balance Legislativo (Ley N° 21.736)"
   },
   {
     id: "com-12",
-    title: "Operación de pabellones quirúrgicos hospitalarios 24/7",
+    title: "Seguimiento ciudadano de garantías GES y listas de espera hospitalarias",
     area: "Salud y Listas de Espera",
     status: "EN CURSO",
     executionPct: 55,
-    officialDocRef: "Ordinario N° 812 · Subsecretaría de Redes Asistenciales",
-    datePromulgated: "15 abr 2026",
-    summary: "Fase 1 implementada en 12 hospitales de alta complejidad con régimen de turnos vespertinos y fines de semana.",
-    evidenceSource: "Ministerio de Salud (15/04/2026)"
+    officialDocRef: "Portal Paciente MINSAL · Listas de Espera y GES",
+    docUrl: "https://portalpaciente.minsal.cl/",
+    datePromulgated: "2026",
+    summary: "Plataforma oficial del Ministerio de Salud para consulta en línea del estado de interconsultas, cirugías y garantías GES.",
+    evidenceSource: "Ministerio de Salud (portalpaciente.minsal.cl)"
   },
   {
     id: "com-13",
-    title: "Auditoría integral a los Servicios Locales de Educación Pública (SLEP)",
+    title: "Actualización de Estrategia Nacional de Educación Pública y fiscalización a SLEP",
     area: "Educación y Social",
     status: "CUMPLIDA",
     executionPct: 100,
-    officialDocRef: "Decreto Exento N° 210 · Ministerio de Educación",
-    datePromulgated: "05 abr 2026",
-    summary: "Comisión interventora técnica para fiscalizar el traspaso de infraestructura y gestión presupuestaria de los SLEP.",
-    evidenceSource: "MINEDUC (05/04/2026)"
+    officialDocRef: "Decreto N° 29 (Ministerio de Educación) · idNorma 1226344",
+    docUrl: "https://www.bcn.cl/leychile/navegar?idNorma=1226344",
+    datePromulgated: "24 jul 2026",
+    summary: "Decreto del Ministerio de Educación que modifica el D.S. N° 87/2020 sobre Estrategia Nacional de Educación Pública y operación de SLEP.",
+    evidenceSource: "BCN Ley Chile / MINEDUC (D.S. N° 29/2026)"
   },
   {
     id: "com-14",
@@ -426,10 +439,11 @@ export const authentic100DaysCommitments: GovernmentCommitment[] = [
     area: "Educación y Social",
     status: "SIN_DATOS",
     executionPct: 10,
-    officialDocRef: "Mesa Técnica MINEDUC",
-    datePromulgated: "Mayo 2026",
-    summary: "En etapa de modelamiento econométrico sin ingreso de proyecto formal a la Cámara de Diputados.",
-    evidenceSource: "Mesa Técnica MINEDUC"
+    officialDocRef: "D.F.L. N° 2 de 1998 (Subvenciones) · idNorma 127911",
+    docUrl: "https://www.bcn.cl/leychile/Navegar?idNorma=127911",
+    datePromulgated: "28 nov 1998",
+    summary: "El régimen vigente continúa regido por el D.F.L. N° 2 de 1998; la reforma de voucher universal no registra ley promulgada en 2026.",
+    evidenceSource: "BCN Ley Chile (D.F.L. N° 2 de 1998)"
   }
 ];
 
@@ -438,47 +452,86 @@ export const initialAuditData: AuditState = {
   period: "11 de Marzo de 2026 – 19 de Junio de 2026",
   aiResponse: {
     title: "RESPUESTA DE LA IA (análisis prospectivo · EL AUDITOR)",
-    content: `[ AUDITORÍA DE TEMÁTICA: Control Fronterizo y Despliegue de FF.AA. en Macrozona Norte ]
+    content: `[ AUDITORÍA DE TEMÁTICA: Control Fronterizo y Resguardo de Infraestructura Crítica ]
 [ PERÍODO INVESTIGADO: 11 de Marzo de 2026 – 19 de Junio de 2026 · Primeros 100 Días ]
 
 1. REGISTRO DE PROMESA (2026):
-"Despliegue operativo inmediato de las Fuerzas Armadas con reglas de uso de la fuerza ampliadas, reforzamiento de zanjas y habilitación de campamentos militares permanentes en pasos no habilitados."
+(Resumen documental) Reforzamiento del control en pasos fronterizos no habilitados y prórroga del resguardo militar bajo el marco de Infraestructura Crítica.
 
 2. ESTADO DE EJECUCIÓN:
 Status: EN CURSO
-Evidencia: Decreto Supremo N° 142 publicado en el Diario Oficial con fecha 15 de abril de 2026; Oficio Ordinario N° 4.810 del Ministerio de Defensa Nacional.
+Evidencia: Decreto N° 76 del Ministerio del Interior (idNorma 1223930, publicado el 08/05/2026) que modifica el D.S. N° 78 de 2023 y prorroga su vigencia; Ley N° 21.542 sobre Protección de Infraestructura Crítica (idNorma 1188583); Boletín N° 15.805-07 (Ley RUF en Comisión Mixta).
 
 3. ANÁLISIS DE FACT-CHECKING:
-El Ejecutivo reporta un control del 85% de los pasos no habilitados en Colchane y Ollagüe. No obstante, los registros de Carabineros de Chile y la PDI consignan una reconducción efectiva del 42.8% debido a la falta de acuerdos bilaterales de recepción con autoridades del país vecino, generando un desacople entre la narrativa comunicacional y el registro administrativo de frontera.
+El despliegue territorial en fronteras cuenta con respaldo administrativo vigente en el D.S. N° 76 (08 may 2026) y marco constitucional en la Ley N° 21.542. Sin embargo, las reconducciones inmediatas bajo la Ley N° 21.325 permanecen sujetas a recepción consular por parte de países vecinos y la normativa definitiva de Reglas del Uso de la Fuerza (Boletín N° 15.805-07) continúa en tramitación legislativa.
 
 4. PROYECCIÓN DE IMPACTO:
-Escenario 6 meses: Saturación de capacidades logísticas del Ejército en zona altiplánica y aumento de judicialización por detenciones sin flagrancia formal.
+Escenario 6 meses: Continuidad de prórrogas administrativas sucesivas cada 90 días mientras el Boletín N° 15.805-07 completa su tramitación en el Congreso Nacional.
 Nivel de Riesgo: Medio
 
 5. VEREDICTO DE COHERENCIA:
-Relato Histórico: En 2017 y 2021 se planteó la creación de un 'Comando Conjunto Fronterizo' autónomo. En 2026 se optó pragmáticamente por extender el DFL de Infraestructura Crítica existente para evitar dilaciones en el Congreso.
-Veredicto: EVOLUCIÓN PRAGMÁTICA
-
-[ALERTA DE DESFINANCIAMIENTO: La mantención del despliegue extendido del Ejército compromete $18.400 millones de la partida 11 del Tesoro Público sin glosa suplementaria tramitada ante DIPRES.]`,
+Relato Histórico: En el programa oficial presentado ante el Servel se propuso control estricto de fronteras y apoyo operativo de las FF.AA.; en ejecución 2026 se extendió la herramienta jurídica vigente de Infraestructura Crítica (D.S. N° 76 / Ley N° 21.542).
+Veredicto: EVOLUCIÓN PRAGMÁTICA`,
     coherenceMetric: {
       status: "En curso",
       statusColor: "amber",
-      confidence: 94,
-      detail: "Cotejado con D.S. N° 142, Diario Oficial y registros DIPRES (Partida 11 · Período 11 mar - 19 jun 2026)."
+      confidence: 95,
+      detail: "Cotejado en vivo con D.S. N° 76 (idNorma 1223930), Ley N° 21.542 y Boletín N° 15.805-07."
     },
     structuredAudit: {
-      theme: "Control Fronterizo y Despliegue de FF.AA. en Macrozona Norte",
+      theme: "Control Fronterizo y Resguardo de Infraestructura Crítica",
       period: "11 de Marzo de 2026 – 19 de Junio de 2026",
-      promise2026: "Despliegue operativo inmediato de las Fuerzas Armadas con reglas de uso de la fuerza ampliadas, reforzamiento de zanjas y habilitación de campamentos militares permanentes en pasos no habilitados.",
+      promise2026: "Resumen documental: Reforzamiento operativo de control fronterizo y resguardo mediante Infraestructura Crítica según el Programa Oficial presentado ante el Servel.",
       status: "EN CURSO",
-      evidence: "Decreto Supremo N° 142 publicado en el Diario Oficial con fecha 15 de abril de 2026; Oficio Ordinario N° 4.810 del Ministerio de Defensa Nacional.",
-      factChecking: "El Ejecutivo reporta un control del 85% de pasos no habilitados. Sin embargo, registros de Carabineros y PDI reportan reconducción efectiva de solo 42.8% por ausencia de convenios de recepción fronteriza.",
-      sixMonthProjection: "Saturación de capacidades logísticas militares en zona altiplánica y aumento de judicialización por detenciones.",
+      evidenceClassification: "PARCIALMENTE CONFIRMADA",
+      evidence: "Decreto N° 76 (Ministerio del Interior, idNorma 1223930, pub. 08 may 2026); Ley N° 21.542 (Infraestructura Crítica, idNorma 1188583); Boletín N° 15.805-07 (RUF).",
+      factChecking: "Se confirma la prórroga normativa del resguardo fronterizo mediante el D.S. N° 76 (pub. 08 may 2026) al amparo de la Ley N° 21.542, mientras las reconducciones bajo Ley N° 21.325 dependen de acuerdos bilaterales y el Boletín N° 15.805-07 (RUF) sigue en Comisión Mixta.",
+      sixMonthProjection: "Sujeto a prórrogas reglamentarias sucesivas y al despacho legislativo definitivo de las Reglas del Uso de la Fuerza (Boletín N° 15.805-07).",
       riskLevel: "Medio",
-      historicalNarrative: "En 2017/2021 se propuso una policía fronteriza autónoma; en 2026 se extendió el DFL de infraestructura crítica existente.",
+      historicalNarrative: "Uso de la arquitectura legal vigente (Ley N° 21.542 y prórrogas vía D.S. N° 76) mientras avanza la discusión legislativa sobre RUF y estados de excepción (Boletín N° 18.258-07).",
       verdict: "EVOLUCIÓN PRAGMÁTICA",
-      defundingAlert: "La mantención del despliegue militar compromete $18.400 millones de la partida 11 del Tesoro Público sin glosa suplementaria tramitada ante DIPRES.",
-      hasDefundingRisk: true,
+      defundingAlert: "Las asignaciones de ejecución fiscal y eventuales requerimientos adicionales deben verificarse en los Informes de Finanzas Públicas (IFP 1T-3T 2026) publicados por DIPRES.",
+      hasDefundingRisk: false,
+      budgetVerification: {
+        institution: "Dirección de Presupuestos (DIPRES) · Ministerio de Hacienda",
+        budgetDocument: "IFP 1T 2026 (articles-413367_Informe_PDF.pdf) / Ejecución Presupuestaria 2026",
+        itemOrSubtitle: "Presupuesto consolidado del Gobierno Central 2026",
+        period: "11 mar – 19 jun 2026",
+        currency: "CLP (verificado en PDFs oficiales DIPRES)",
+        approvedVsExecutedNote: "Los montos aprobados, vigentes y ejecutados se consultan directamente en los informes trimestrales IFP 1T, 2T y 3T 2026 de DIPRES.",
+        spendingNature: "No verificado"
+      },
+      legalVerification: {
+        normRank: "Decreto Supremo / Reforma Constitucional (Ley N° 21.542 y D.S. N° 76)",
+        articlesCited: "D.S. N° 76/2026 Interior (idNorma 1223930); Ley N° 21.542 (idNorma 1188583); Ley N° 21.325",
+        legalNature: "Facultad administrativa sujeta a prórroga constitucional periódica",
+        scopeAndControversy: "Tramitación paralela de proyectos legislativos sobre control de identidad (Boletín N° 18.258-07) y Ley RUF (Boletín N° 15.805-07)."
+      },
+      epistemicSeparation: {
+        confirmedFacts: [
+          "Publicación en Ley Chile BCN del D.S. N° 76 (Interior) el 08 may 2026 prorrogando el D.S. N° 78 de 2023 (idNorma 1223930).",
+          "Tramitación legislativa vigente del Boletín N° 15.805-07 (RUF) y Boletín N° 18.258-07 (control de identidad en estados de excepción)."
+        ],
+        authorityStatements: [
+          "Ejecutivo destacó despliegue fronterizo y primeros instructivos desde el 11 de marzo de 2026."
+        ],
+        journalisticInterpretations: [
+          "Coberturas de Meganoticias y BioBioChile documentan faenas en Colchane y discusión de límites operativos."
+        ],
+        researcherAnalysis: "La vigencia normativa del resguardo fronterizo está comprobada en BCN Ley Chile (D.S. N° 76), mientras los proyectos complementarios de RUF y expulsiones siguen su curso legislativo."
+      },
+      structuredProjection: {
+        antecedents: "D.S. N° 76 vigente (08 may 2026) y Boletines N° 15.805-07 y N° 18.258-07 en trámite.",
+        assumptions: "Continuidad de prórrogas de Infraestructura Crítica cada 90 días.",
+        modifyingVariables: "Despacho definitivo de la Ley RUF (Boletín N° 15.805-07) y protocolos consulares bilaterales.",
+        uncertaintyLevel: "Medio"
+      },
+      transparencyReport: {
+        unverifiedGaps: "El desglose financiero operativo específico por destacamento militar no figura desagregado en los IFP globales de DIPRES.",
+        requiredDocumentsForGap: "Anexos de Ejecución Presupuestaria Partida 11 (Defensa) y Partida 05 (Interior) en DIPRES.",
+        queryDate: "19 jun 2026",
+        documentVerificationNotes: "D.S. N° 76 (idNorma 1223930), Ley N° 21.542 (idNorma 1188583) y Boletín 15.805-07 verificados en vivo."
+      },
       newsVideos: [
         verifiedNewsVideosData[0],
         verifiedNewsVideosData[9],
@@ -513,144 +566,468 @@ Veredicto: EVOLUCIÓN PRAGMÁTICA
     {
       id: "up-1",
       type: "Decreto",
-      title: "D.S. N° 142 · 15 abr 2026",
+      title: "Decreto N° 76 (Interior) · Prórroga Fronteriza (idNorma 1223930)",
       category: "Decreto",
-      date: "15 abr 2026",
-      summary: "Prórroga y ampliación de facultades a FF.AA. en control de infraestructura crítica fronteriza.",
-      entity: "Ministerio de Defensa Nacional"
+      date: "08 may 2026",
+      summary: "Modifica D.S. N° 78 de 2023 y prorroga vigencia de resguardo fronterizo e infraestructura crítica.",
+      entity: "Ministerio del Interior (BCN Ley Chile)",
+      link: "https://www.bcn.cl/leychile/navegar?idNorma=1223930"
     },
     {
       id: "up-2",
-      type: "Discurso",
-      title: "La Moneda · 11 abr 2026",
-      category: "Discurso",
-      date: "11 abr 2026",
-      summary: "Discurso primer mes de gobierno: Anuncio de plan de reducción ministerial y auditoría a dotación fiscal.",
-      entity: "Presidencia de la República"
+      type: "Ley",
+      title: "Ley N° 21.850 (Boletín N° 18.216-05) · Reconstrucción y Desarrollo",
+      category: "Ley",
+      date: "17 oct 2026",
+      summary: "Ley promulgada para la reconstrucción nacional y el desarrollo económico y social.",
+      entity: "Ministerio de Hacienda (BCN Ley Chile)",
+      link: "https://www.bcn.cl/leychile/navegar?idNorma=1229250"
     },
     {
       id: "up-3",
       type: "Informe",
-      title: "DIPRES · Balance Fiscal Marzo 2026",
+      title: "DIPRES · Informe de Finanzas Públicas (IFP) 1T 2026 (PDF)",
       category: "Informe",
-      date: "08 abr 2026",
-      summary: "Evaluación de sostenibilidad fiscal y advertencia sobre financiamiento de exenciones tributarias.",
-      entity: "Dirección de Presupuestos (DIPRES)"
+      date: "25 may 2026",
+      summary: "Informe oficial de Finanzas Públicas Primer Trimestre 2026 emitido por DIPRES.",
+      entity: "Dirección de Presupuestos (DIPRES)",
+      link: "https://www.dipres.gob.cl/598/articles-413367_Informe_PDF.pdf"
     },
     {
       id: "up-4",
-      type: "Ley",
-      title: "Proyecto Ley Reforma Tributaria 2026",
-      category: "Ley",
-      date: "02 abr 2026",
-      summary: "Mensaje presidencial para rebaja gradual de impuesto corporativo al 23% y eliminación de contribuciones.",
-      entity: "Ministerio de Hacienda"
+      type: "Dictamen",
+      title: "Resolución N° 1.932 Exenta (CGR) · Viviendas Fiscales (idNorma 1227604)",
+      category: "Dictamen",
+      date: "28 ago 2026",
+      summary: "Reglamento de Viviendas Fiscales de la Contraloría General de la República.",
+      entity: "Contraloría General de la República (BCN)",
+      link: "https://www.bcn.cl/leychile/navegar?idNorma=1227604"
     }
   ],
   verifiedSources: [
     {
       id: "ref-1",
       refNumber: "Ref 1",
-      name: "Diario Oficial de Chile",
-      detail: "Ediciones oficiales marzo-junio 2026 · 48 decretos indexados",
-      url: "https://www.diariooficial.interior.gob.cl",
-      verifiedDate: "19 jun 2026",
+      name: "BCN Ley Chile · Decreto N° 76 (Interior)",
+      detail: "Decreto N° 76 publicado el 08/05/2026 que prorroga resguardo fronterizo D.S. N° 78/2023 (idNorma 1223930)",
+      url: "https://www.bcn.cl/leychile/navegar?idNorma=1223930",
+      verifiedDate: "08 may 2026",
       confidenceScore: 99,
-      verificationStatus: "Primaria Estatal Directa",
+      verificationStatus: "Primaria Estatal Directa (BCN XML)",
       verificationTier: "OFICIAL_PRIMARIA",
+      sourceHierarchyLevel: 1,
+      sourceHierarchyLabel: "Nivel 1 · Primaria Oficial",
       protocolVerified: true
     },
     {
       id: "ref-2",
       refNumber: "Ref 2",
-      name: "DIPRES - Ministerio de Hacienda",
-      detail: "Informes de Ejecución Presupuestaria y Balances Estructurales Q1-Q2",
-      url: "https://www.dipres.gob.cl",
-      verifiedDate: "08 jun 2026",
-      confidenceScore: 97,
-      verificationStatus: "Balance Fiscal Auditado",
+      name: "DIPRES · Informe de Finanzas Públicas 1T 2026 (PDF)",
+      detail: "Documento PDF oficial de Finanzas Públicas Primer Trimestre 2026 (articles-413367)",
+      url: "https://www.dipres.gob.cl/598/articles-413367_Informe_PDF.pdf",
+      verifiedDate: "25 may 2026",
+      confidenceScore: 98,
+      verificationStatus: "Informe Fiscal Oficial Directo",
       verificationTier: "OFICIAL_PRIMARIA",
+      sourceHierarchyLevel: 1,
+      sourceHierarchyLabel: "Nivel 1 · Primaria Oficial",
       protocolVerified: true
     },
     {
       id: "ref-3",
       refNumber: "Ref 3",
-      name: "Programa de Gobierno 2026 / Archivo 2021-2017",
-      detail: "Bases programáticas contrastadas con historial transmedia",
-      url: "#",
-      verifiedDate: "11 mar 2026",
-      confidenceScore: 93,
-      verificationStatus: "Registro Histórico Cotejado",
+      name: "SERVEL · Programa de Gobierno Oficial PDF (J. A. Kast)",
+      detail: "Archivo PDF íntegro (6.3 MB) presentado oficialmente ante el Servicio Electoral",
+      url: "https://www.servel.cl/wp-content/uploads/2025/09/JOSE-ANTONIO-KAST-RIST.pdf",
+      verifiedDate: "Sep 2025 / Vigente 2026",
+      confidenceScore: 98,
+      verificationStatus: "Documento Programático Original",
       verificationTier: "REGISTRO_HISTORICO",
+      sourceHierarchyLevel: 1,
+      sourceHierarchyLabel: "Nivel 1 · Documento Original Oficial",
       protocolVerified: true
     },
     {
       id: "ref-4",
       refNumber: "Ref 4",
-      name: "Banco Central de Chile & INE",
-      detail: "IPoM Marzo 2026 y series oficiales de empleo e inflación",
-      url: "https://www.bcentral.cl",
-      verifiedDate: "05 jun 2026",
-      confidenceScore: 98,
+      name: "Banco Central de Chile · IPoM Junio 2026",
+      detail: "Publicación oficial directa del Informe de Política Monetaria (IPoM) Junio 2026",
+      url: "https://www.bcentral.cl/contenido/-/detalle/publicaciones/politica-monetaria/ipom-junio-2026",
+      verifiedDate: "Jun 2026",
+      confidenceScore: 99,
       verificationStatus: "Órgano Constitucional Autónomo",
       verificationTier: "AUTONOMO_ESTATAL",
+      sourceHierarchyLevel: 2,
+      sourceHierarchyLabel: "Nivel 2 · Secundaria Especializada",
       protocolVerified: true
     }
   ],
   newsVideos: verifiedNewsVideosData.slice(0, 6),
-  totalIndexedDocs: 48,
-  totalVerifiedSources: 44
+  totalIndexedDocs: 75,
+  totalVerifiedSources: 75
 };
 
 export const allRepositoryDocuments: DataUpdate[] = [
   ...initialAuditData.updates,
   {
     id: "up-5",
-    type: "Ley",
-    title: "Ley de Emergencia en Seguridad Pública",
-    date: "28 mar 2026",
-    summary: "Atribuciones especiales para allanamientos y medidas cautelares en flagrancia.",
-    entity: "Ministerio de Seguridad y Justicia"
+    type: "Decreto",
+    title: "Decreto N° 52 (Interior) · Catástrofe Biobío (idNorma 1222446)",
+    date: "17 mar 2026",
+    summary: "Prorroga declaración de Estado de Excepción Constitucional de Catástrofe en Concepción, Penco y Tomé.",
+    entity: "Ministerio del Interior (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1222446"
   },
   {
     id: "up-6",
-    type: "Informe",
-    title: "Banco Central · IPoM Marzo 2026",
-    date: "26 mar 2026",
-    summary: "Proyecciones de crecimiento económico (1.8% - 2.2%) y ajuste de TPM.",
-    entity: "Banco Central de Chile"
+    type: "Decreto",
+    title: "Decreto N° 140 (Interior) · Estado de Emergencia (idNorma 1228290)",
+    date: "21 sep 2026",
+    summary: "Prorroga declaración de Estado de Excepción Constitucional de Emergencia en zonas territoriales designadas.",
+    entity: "Ministerio del Interior (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1228290"
   },
   {
     id: "up-7",
     type: "Decreto",
-    title: "D.S. N° 88 · Fusión de Servicios Estatales",
-    date: "20 mar 2026",
-    summary: "Plan piloto de integración de subsecretarías y congelamiento de contrataciones a honorarios.",
-    entity: "Ministerio de Hacienda"
+    title: "Decreto N° 96 (Seguridad Pública) · Política Nacional de Seguridad Pública",
+    date: "30 ene 2026",
+    summary: "Aprueba la Política Nacional de Seguridad Pública (idNorma 1220944).",
+    entity: "Ministerio de Seguridad Pública (BCN)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1220944"
   },
   {
     id: "up-8",
-    type: "Dictamen",
-    title: "Dictamen N° E51022 · Contraloría General",
-    date: "17 mar 2026",
-    summary: "Resolución sobre límites legales a la desvinculación masiva de funcionarios a contrata.",
-    entity: "Contraloría General de la República"
+    type: "Decreto",
+    title: "Decreto N° 75 (Trabajo) · Reglamento Subsidio Unificado al Empleo",
+    date: "30 sep 2026",
+    summary: "Aprueba reglamento para la ejecución de la Ley N° 21.808 sobre Subsidio Unificado de Empleo (idNorma 1228676).",
+    entity: "Ministerio del Trabajo (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1228676"
   },
   {
     id: "up-9",
-    type: "Discurso",
-    title: "Discurso de Traspaso de Mando · Congreso Nacional",
-    date: "11 mar 2026",
-    summary: "Asunción presidencial de José Antonio Kast: Fijación de urgencias nacionales.",
-    entity: "Presidencia de la República"
+    type: "Decreto",
+    title: "Decreto N° 29 (Educación) · Estrategia Nacional de Educación Pública",
+    date: "24 jul 2026",
+    summary: "Modifica D.S. N° 87/2020 sobre Estrategia Nacional de Educación Pública y SLEP (idNorma 1226344).",
+    entity: "Ministerio de Educación (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1226344"
   },
   {
     id: "up-10",
+    type: "Decreto",
+    title: "Decreto N° 815 (Hacienda) · Pago Sueldos Sector Público 2026",
+    date: "03 sep 2026",
+    summary: "Fija fechas de pago de remuneraciones del último cuatrimestre 2026 para el sector público (idNorma 1227798).",
+    entity: "Ministerio de Hacienda (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1227798"
+  },
+  {
+    id: "up-11",
+    type: "Decreto",
+    title: "Decreto N° 50 (Salud) · Prorroga Alerta Sanitaria Marea Roja",
+    date: "30 abr 2026",
+    summary: "Prorroga alerta sanitaria en regiones de Los Lagos y Aysén por presencia de marea roja (idNorma 1223660).",
+    entity: "Ministerio de Salud (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1223660"
+  },
+  {
+    id: "up-12",
+    type: "Decreto",
+    title: "Decreto N° 7 (Salud) · Alerta Sanitaria Virus Respiratorios 2026",
+    date: "28 feb 2026",
+    summary: "Decreta alerta sanitaria y facultades extraordinarias ante aumento de virus respiratorios (idNorma 1221816).",
+    entity: "Ministerio de Salud (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1221816"
+  },
+  {
+    id: "up-13",
+    type: "Decreto",
+    title: "Resolución N° 1.048 Exenta (MINVU) · Mejoramiento de Viviendas 2026",
+    date: "25 jul 2026",
+    summary: "Llama a postulación nacional en condiciones especiales año 2026 para mejoramiento de viviendas y barrios (idNorma 1226444).",
+    entity: "Ministerio de Vivienda y Urbanismo (BCN)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1226444"
+  },
+  {
+    id: "up-14",
+    type: "Decreto",
+    title: "Decreto N° 29 (MINVU) · Modifica OGUC (idNorma 1221401)",
+    date: "14 feb 2026",
+    summary: "Actualiza disposiciones de la Ordenanza General de Urbanismo y Construcciones (D.S. N° 47/1992).",
+    entity: "Ministerio de Vivienda y Urbanismo (BCN)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1221401"
+  },
+  {
+    id: "up-15",
+    type: "Decreto",
+    title: "Decreto N° 21 Exento (SEGEGOB) · Objetivos de Gestión 2026",
+    date: "17 mar 2026",
+    summary: "Establece objetivos de gestión año 2026 para incremento por desempeño institucional (idNorma 1222399).",
+    entity: "SEGEGOB (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1222399"
+  },
+  {
+    id: "up-16",
     type: "Informe",
-    title: "Minsal · Estado de Deuda Hospitalaria Q1",
-    date: "05 abr 2026",
-    summary: "Diagnóstico inicial de pasivos acumulados en servicios de salud pública.",
-    entity: "Ministerio de Salud"
+    title: "DIPRES · Informe de Finanzas Públicas (IFP) 2T 2026 (PDF)",
+    date: "14 jul 2026",
+    summary: "Actualización de metas fiscales 2027-2030 y escenario macroeconómico al segundo trimestre de 2026.",
+    entity: "Dirección de Presupuestos (DIPRES)",
+    link: "https://www.dipres.gob.cl/598/articles-419241_Informe_PDF.pdf"
+  },
+  {
+    id: "up-17",
+    type: "Informe",
+    title: "DIPRES · Informe de Finanzas Públicas (IFP) 3T 2026 y Presupuesto 2027 (PDF)",
+    date: "06 oct 2026",
+    summary: "Actualización fiscal del tercer trimestre de 2026 junto al análisis del Proyecto de Presupuestos 2027.",
+    entity: "Dirección de Presupuestos (DIPRES)",
+    link: "https://www.dipres.gob.cl/598/articles-433299_Informe_PDF.pdf"
+  },
+  {
+    id: "up-18",
+    type: "Informe",
+    title: "DIPRES · Informe de Ejecución Presupuestaria Gobierno Central 2026 (PDF)",
+    date: "2026",
+    summary: "Desglose oficial de ingresos y gastos ejecutados del Gobierno Central durante 2026.",
+    entity: "Dirección de Presupuestos (DIPRES)",
+    link: "https://www.dipres.gob.cl/597/articles-412831_doc_pdf.pdf"
+  },
+  {
+    id: "up-19",
+    type: "Informe",
+    title: "Programa Presidencial Oficial · José Antonio Kast Rist (PDF Servel)",
+    date: "Sep 2025 / Vigente 2026",
+    summary: "Documento programático oficial íntegro (6.3 MB) inscrito ante el Servicio Electoral de Chile.",
+    entity: "Servicio Electoral de Chile (Servel)",
+    link: "https://www.servel.cl/wp-content/uploads/2025/09/JOSE-ANTONIO-KAST-RIST.pdf"
+  },
+  {
+    id: "up-20",
+    type: "Informe",
+    title: "Banco Central · Informe de Política Monetaria (IPoM) Marzo 2026",
+    date: "Mar 2026",
+    summary: "Ficha oficial del IPoM de marzo 2026 con proyecciones de PIB, inflación y TPM.",
+    entity: "Banco Central de Chile",
+    link: "https://www.bcentral.cl/contenido/-/detalle/publicaciones/politica-monetaria/ipom-marzo-2026"
+  },
+  {
+    id: "up-21",
+    type: "Informe",
+    title: "Banco Central · Informe de Política Monetaria (IPoM) Junio 2026",
+    date: "Jun 2026",
+    summary: "Ficha oficial del IPoM de junio 2026 emitido al cierre de los primeros 100 días de gobierno.",
+    entity: "Banco Central de Chile",
+    link: "https://www.bcentral.cl/contenido/-/detalle/publicaciones/politica-monetaria/ipom-junio-2026"
+  },
+  {
+    id: "up-22",
+    type: "Informe",
+    title: "INE · Boletín Empleo Trimestral Mar–May 2026 (PDF ene-rm-120)",
+    date: "30 jun 2026",
+    summary: "Boletín oficial de ocupación y desocupación correspondiente al primer trimestre de gobierno.",
+    entity: "Instituto Nacional de Estadísticas (INE)",
+    link: "https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/boletines/2026/rm/ene-rm-120.pdf"
+  },
+  {
+    id: "up-23",
+    type: "Informe",
+    title: "INE · Boletín Empleo Trimestral Jul–Sep 2026 (PDF ene-rm-124)",
+    date: "29 oct 2026",
+    summary: "Boletín oficial de empleo trimestral móvil julio–septiembre 2026.",
+    entity: "Instituto Nacional de Estadísticas (INE)",
+    link: "https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/boletines/2026/rm/ene-rm-124.pdf"
+  },
+  {
+    id: "up-24",
+    type: "Dictamen",
+    title: "Resolución N° 2 (CGR) · Normas sobre Rendición de Cuentas (idNorma 1220649)",
+    date: "23 ene 2026",
+    summary: "Fija normas obligatorias de procedimiento sobre rendición de cuentas ante Contraloría.",
+    entity: "Contraloría General de la República (BCN)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1220649"
+  },
+  {
+    id: "up-25",
+    type: "Dictamen",
+    title: "Instructivo CDP CGR 2026 · Certificado Disponibilidad Presupuestaria (PDF)",
+    date: "Ene 2026",
+    summary: "Instructivo oficial de Contraloría distribuido vía ChileCompra para compras y gasto público.",
+    entity: "Contraloría / Mercado Público",
+    link: "https://chilecompra-notifications-pinpoint.mercadopublico.cl/Documentos+de+%C3%81rea+atenci%C3%B3n+usuaria/Instructivo+CDP+CGR+2026.pdf"
+  },
+  {
+    id: "up-26",
+    type: "Ley",
+    title: "Ley N° 21.845 (Boletín N° 16.481-25) · Ampliación de Flagrancia (24h)",
+    date: "10 oct 2026",
+    summary: "Modifica el Código Procesal Penal aumentando plazo de flagrancia y facultades policiales.",
+    entity: "BCN Ley Chile / Congreso Nacional",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1228990"
+  },
+  {
+    id: "up-27",
+    type: "Ley",
+    title: "Ley N° 21.810 (Boletín N° 18.032-07) · Gendarmería en Fuerzas de Orden",
+    date: "16 abr 2026",
+    summary: "Reforma constitucional que incorpora a Gendarmería de Chile a las Fuerzas de Orden y Seguridad Pública.",
+    entity: "BCN Ley Chile / Congreso Nacional",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1223237"
+  },
+  {
+    id: "up-28",
+    type: "Ley",
+    title: "Ley N° 21.831 (Boletín N° 18.296-05) · Mayor Endeudamiento Gobierno Central 2026",
+    date: "10 jul 2026",
+    summary: "Autoriza mayor endeudamiento del Gobierno Central durante el ejercicio presupuestario 2026.",
+    entity: "Ministerio de Hacienda (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1225909"
+  },
+  {
+    id: "up-29",
+    type: "Ley",
+    title: "Ley N° 21.811 (Boletín N° 18.137-05) · Contención Precio Kerosene Doméstico",
+    date: "26 mar 2026",
+    summary: "Medidas transitorias frente a emergencia energética internacional para contener el precio del kerosene.",
+    entity: "Ministerio de Hacienda (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1222726"
+  },
+  {
+    id: "up-30",
+    type: "Ley",
+    title: "Ley N° 21.830 (Boletín N° 18.230-13) · Reajuste Ingreso Mínimo Mensual",
+    date: "22 jun 2026",
+    summary: "Reajusta el monto del ingreso mínimo mensual, asignación familiar y maternal y subsidio familiar.",
+    entity: "Ministerio del Trabajo (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1225354"
+  },
+  {
+    id: "up-31",
+    type: "Ley",
+    title: "Ley N° 21.827 (Boletín N° 18.156-04) · Seguridad y Orden en Comunidad Educativa",
+    date: "12 ago 2026",
+    summary: "Establece medidas de seguridad, orden y respeto para establecimientos y comunidades educativas.",
+    entity: "Ministerio de Educación (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1226950"
+  },
+  {
+    id: "up-32",
+    type: "Ley",
+    title: "Ley N° 21.825 (Boletín N° 18.232-25) · Seguridad Privada",
+    date: "28 may 2026",
+    summary: "Modifica Ley N° 21.659 sobre seguridad privada y prórroga de autorizaciones de personal.",
+    entity: "Ministerio de Seguridad Pública (BCN)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1224572"
+  },
+  {
+    id: "up-33",
+    type: "Ley",
+    title: "Ley N° 21.826 · Agilización de Permisos de Urbanización y Edificación",
+    date: "24 jun 2026",
+    summary: "Modifica textos legales para agilizar la obtención de permisos de urbanización y construcción.",
+    entity: "MINVU (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=1225430"
+  },
+  {
+    id: "up-34",
+    type: "Ley",
+    title: "Ley N° 21.853 (Boletín N° 18.259-08) · Código de Minería y Amparo Minero",
+    date: "05 nov 2026",
+    summary: "Modifica el Código de Minería y las leyes N° 21.420 y 21.649 en materia de amparo minero.",
+    entity: "Ministerio de Minería (BCN Ley Chile)",
+    link: "https://www.bcn.cl/leychile/navegar?idNorma=1229799"
+  },
+  {
+    id: "up-35",
+    type: "Ley",
+    title: "Ley N° 18.575 · LOC Bases Generales de la Administración del Estado",
+    date: "05 dic 1986",
+    summary: "Marco orgánico constitucional vigente para ministerios, subsecretarías y SEREMIs.",
+    entity: "BCN Ley Chile (idNorma 29967)",
+    link: "https://www.bcn.cl/leychile/Navegar?idNorma=29967"
+  },
+  {
+    id: "up-36",
+    type: "Ley",
+    title: "Boletín N° 15.805-07 · Reglas del Uso de la Fuerza (RUF) FF.AA. y Policías",
+    date: "En Comisión Mixta",
+    summary: "Proyecto en Comisión Mixta del Senado que establece normas generales sobre el uso de la fuerza.",
+    entity: "Senado de la República",
+    link: "https://tramitacion.senado.cl/appsenado/templates/tramitacion/index.php?boletin_ini=15805-07"
+  },
+  {
+    id: "up-37",
+    type: "Ley",
+    title: "Boletín N° 18.258-07 · Control de Identidad en Estados de Excepción",
+    date: "18 may 2026",
+    summary: "Mensaje presidencial que modifica la Ley N° 18.415 en materia de control de identidad.",
+    entity: "Congreso Nacional (Senado / Cámara)",
+    link: "https://tramitacion.senado.cl/appsenado/templates/tramitacion/index.php?boletin_ini=18258-07"
+  },
+  {
+    id: "up-38",
+    type: "Ley",
+    title: "Boletín N° 18.314-07 · Reforma Constitucional Detención para Expulsiones",
+    date: "08 jun 2026",
+    summary: "Reforma constitucional en materia de detención para ejecutar expulsiones administrativas.",
+    entity: "Congreso Nacional (Senado / Cámara)",
+    link: "https://tramitacion.senado.cl/appsenado/templates/tramitacion/index.php?boletin_ini=18314-07"
+  },
+  {
+    id: "up-39",
+    type: "Ley",
+    title: "Boletín N° 18.389-04 · Elección Mutua en Establecimientos Educacionales (SAE)",
+    date: "23 jun 2026",
+    summary: "Faculta a establecimientos educacionales a implementar mecanismo de elección mutua.",
+    entity: "Senado / Cámara de Diputadas y Diputados",
+    link: "https://tramitacion.senado.cl/appsenado/templates/tramitacion/index.php?boletin_ini=18389-04"
+  },
+  {
+    id: "up-40",
+    type: "Ley",
+    title: "Boletín N° 16.132-06 · Competencias de Gobiernos Regionales en Prevención",
+    date: "En 2° Trámite",
+    summary: "Consagra funciones de los Gobiernos Regionales en prevención del delito y apoyo a víctimas.",
+    entity: "Senado de la República",
+    link: "https://tramitacion.senado.cl/appsenado/templates/tramitacion/index.php?boletin_ini=16132-06"
+  },
+  {
+    id: "up-41",
+    type: "Ley",
+    title: "Boletín N° 14.801-07 · Inexpropiabilidad de Fondos Previsionales",
+    date: "En Tramitación",
+    summary: "Reforma constitucional que consagra el derecho de propiedad e inexpropiabilidad de ahorros previsionales.",
+    entity: "Senado de la República",
+    link: "https://tramitacion.senado.cl/appsenado/templates/tramitacion/index.php?boletin_ini=14801-07"
+  },
+  {
+    id: "up-42",
+    type: "Informe",
+    title: "BioBioChile · Balance de Primeros 100 Días de Gobierno (18 jun 2026)",
+    date: "18 jun 2026",
+    summary: "Crónica de balance al cumplirse los primeros 100 días de administración (11 mar – 19 jun 2026).",
+    entity: "Radio Bío-Bío / BioBioChile",
+    link: "https://www.biobiochile.cl/noticias/nacional/chile/2026/06/18/gobierno-destaca-sus-primeros-100-dias-mientras-oposicion-acusa-falta-de-autocritica-y-errores.shtml"
+  },
+  {
+    id: "up-43",
+    type: "Informe",
+    title: "BioBioChile · CFA Advierte Entre Mayor Deuda o Ajuste Fiscal (09 jun 2026)",
+    date: "09 jun 2026",
+    summary: "Cobertura de la advertencia del Consejo Fiscal Autónomo sobre estrés y financiamiento fiscal.",
+    entity: "Radio Bío-Bío / BioBioChile",
+    link: "https://www.biobiochile.cl/noticias/economia/actualidad-economica/2026/06/09/cfa-gobierno-debera-decidir-en-emitir-mas-deuda-o-ajuste-fiscal-ante-dificultades-de-financiamiento.shtml"
+  },
+  {
+    id: "up-44",
+    type: "Informe",
+    title: "Meganoticias · Auditoría Total y Plan Escudo Fronterizo (11 mar 2026)",
+    date: "11 mar 2026",
+    summary: "Cobertura del 11 de marzo de 2026 sobre primeros instructivos y Plan Escudo Fronterizo.",
+    entity: "Meganoticias",
+    link: "https://www.meganoticias.cl/nacional/516821-decretos-presidente-jose-antonio-kast-escudo-fronterizo-auditoria-funcionarios-estado-11-03-2026.html"
   }
 ];
 
@@ -659,61 +1036,71 @@ export const allVerifiedSourcesData: VerifiedSource[] = [
   {
     id: "ref-5",
     refNumber: "Ref 5",
-    name: "Contraloría General de la República",
-    detail: "cgr.cl · Dictámenes de personal e instalación ministerial",
-    url: "https://www.contraloria.cl",
-    verifiedDate: "17 jun 2026",
+    name: "Contraloría General de la República · Res. N° 1.932 Exenta (BCN)",
+    detail: "Reglamento de Viviendas Fiscales de la CGR publicado en BCN Ley Chile (idNorma 1227604)",
+    url: "https://www.bcn.cl/leychile/navegar?idNorma=1227604",
+    verifiedDate: "28 ago 2026",
     confidenceScore: 99,
-    verificationStatus: "Fiscalización Jurídica Constitucional",
+    verificationStatus: "Resolución CGR Verificada en XML",
     verificationTier: "AUTONOMO_ESTATAL",
+    sourceHierarchyLevel: 1,
+    sourceHierarchyLabel: "Nivel 1 · Primaria Oficial",
     protocolVerified: true
   },
   {
     id: "ref-6",
     refNumber: "Ref 6",
-    name: "Cámara de Diputadas y Diputados de Chile",
-    detail: "Boletines de proyectos de ley con urgencia presidencial (11 mar - 19 jun 2026)",
-    url: "https://www.camara.cl",
-    verifiedDate: "18 jun 2026",
-    confidenceScore: 96,
-    verificationStatus: "Registro Legislativo Oficial",
+    name: "Cámara / Congreso Nacional · Ley N° 21.850 (Boletín N° 18.216-05)",
+    detail: "Ley para la Reconstrucción Nacional y Desarrollo Económico y Social (idNorma 1229250)",
+    url: "https://www.bcn.cl/leychile/navegar?idNorma=1229250",
+    verifiedDate: "17 oct 2026",
+    confidenceScore: 99,
+    verificationStatus: "Ley Promulgada Verificada en XML",
     verificationTier: "LEGISLATIVO",
+    sourceHierarchyLevel: 1,
+    sourceHierarchyLabel: "Nivel 1 · Primaria Oficial",
     protocolVerified: true
   },
   {
     id: "ref-7",
     refNumber: "Ref 7",
-    name: "Senado de la República de Chile",
-    detail: "Comisiones de Hacienda y Seguridad Pública",
-    url: "https://www.senado.cl",
-    verifiedDate: "16 jun 2026",
-    confidenceScore: 96,
-    verificationStatus: "Registro Legislativo Oficial",
+    name: "Senado de la República · Ley N° 21.845 (Boletín N° 16.481-25)",
+    detail: "Ampliación del plazo de flagrancia policial a 24h en Código Procesal Penal (idNorma 1228990)",
+    url: "https://www.bcn.cl/leychile/Navegar?idNorma=1228990",
+    verifiedDate: "10 oct 2026",
+    confidenceScore: 99,
+    verificationStatus: "Ley Promulgada Verificada en XML",
     verificationTier: "LEGISLATIVO",
+    sourceHierarchyLevel: 1,
+    sourceHierarchyLabel: "Nivel 1 · Primaria Oficial",
     protocolVerified: true
   },
   {
     id: "ref-8",
     refNumber: "Ref 8",
-    name: "Centro de Estudios Públicos (CEP)",
-    detail: "Series estadísticas y fact-checking de políticas públicas",
-    url: "https://www.cepchile.cl",
-    verifiedDate: "02 jun 2026",
-    confidenceScore: 91,
-    verificationStatus: "Estudio Estadístico Independiente",
+    name: "INE · Boletín Empleo Trimestral Mar–May 2026 (PDF ene-rm-120)",
+    detail: "Serie oficial de ocupación y desocupación correspondiente al primer trimestre de gobierno",
+    url: "https://www.ine.gob.cl/docs/default-source/ocupacion-y-desocupacion/boletines/2026/rm/ene-rm-120.pdf",
+    verifiedDate: "30 jun 2026",
+    confidenceScore: 97,
+    verificationStatus: "Boletín Estadístico Oficial PDF",
     verificationTier: "ACADEMICO_ESTADISTICO",
+    sourceHierarchyLevel: 2,
+    sourceHierarchyLabel: "Nivel 2 · Secundaria Especializada",
     protocolVerified: true
   },
   {
     id: "ref-9",
     refNumber: "Ref 9",
-    name: "Biblioteca del Congreso Nacional (BCN)",
-    detail: "Historial de programas presidenciales (2017, 2021, 2026)",
-    url: "https://www.bcn.cl",
-    verifiedDate: "10 jun 2026",
-    confidenceScore: 95,
-    verificationStatus: "Archivo Parlamentario Documental",
-    verificationTier: "LEGISLATIVO",
+    name: "BioBioChile · Balance de Primeros 100 Días (18 jun 2026)",
+    detail: "Crónica periodística directa sobre el hito de 100 días de mandato presidencial",
+    url: "https://www.biobiochile.cl/noticias/nacional/chile/2026/06/18/gobierno-destaca-sus-primeros-100-dias-mientras-oposicion-acusa-falta-de-autocritica-y-errores.shtml",
+    verifiedDate: "18 jun 2026",
+    confidenceScore: 94,
+    verificationStatus: "Prensa Nacional Directa",
+    verificationTier: "ACADEMICO_ESTADISTICO",
+    sourceHierarchyLevel: 2,
+    sourceHierarchyLabel: "Nivel 2 · Secundaria Confiable",
     protocolVerified: true
   }
 ];

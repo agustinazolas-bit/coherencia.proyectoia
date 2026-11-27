@@ -1,41 +1,197 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
   html, body {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #eef2f6;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.55) 0px,
+        rgba(255, 255, 255, 0.55) 2px,
+        rgba(214, 222, 232, 0.25) 2px,
+        rgba(214, 222, 232, 0.25) 4px
+      ),
+      linear-gradient(180deg, #f4f7fa 0%, #e7ecf2 100%);
+    color: #363d47;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  html.dark, .dark body {
+    background-color: #0e131a;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.025) 0px,
+        rgba(255, 255, 255, 0.025) 2px,
+        rgba(0, 0, 0, 0.16) 2px,
+        rgba(0, 0, 0, 0.16) 4px
+      ),
+      linear-gradient(180deg, #131922 0%, #0b0f16 100%);
+    color: #e2e8f0;
   }
 
   ::selection {
-    background-color: #ef4444;
+    background-color: #32b8f2;
     color: #ffffff;
   }
 
-  /* Custom Red, White & Black Scrollbars */
+  /* Soft Silver & Cyan Wii Scrollbars */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
   }
   ::-webkit-scrollbar-track {
-    background: #000000;
+    background: #eef2f6;
+    border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb {
-    background: #7f1d1d;
-    border-radius: 4px;
+    background: #c5cfd9;
+    border-radius: 9999px;
+    border: 1px solid #f8fafc;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #ef4444;
+    background: #32b8f2;
   }
+
+  html.dark ::-webkit-scrollbar-track {
+    background: #131922;
+  }
+  html.dark ::-webkit-scrollbar-thumb {
+    background: #2f3b4d;
+    border: 1px solid #1b222c;
+  }
+  html.dark ::-webkit-scrollbar-thumb:hover {
+    background: #32b8f2;
+  }
+}
+
+/* Nintendo Wii Glossy Surfaces & Tactile Shadows */
+.wii-surface {
+  background: linear-gradient(180deg, #ffffff 0%, #f5f8fb 100%);
+  border: 1.5px solid #cfd7e2;
+  box-shadow:
+    0 12px 32px rgba(66, 82, 102, 0.1),
+    0 2px 8px rgba(66, 82, 102, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.dark .wii-surface {
+  background: linear-gradient(180deg, #1a212c 0%, #131922 100%);
+  border: 1.5px solid #2d3848;
+  box-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.45),
+    0 3px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.wii-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  border: 1.5px solid #ced6e0;
+  box-shadow:
+    0 4px 14px rgba(66, 82, 102, 0.08),
+    0 1px 3px rgba(66, 82, 102, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.dark .wii-card {
+  background: linear-gradient(180deg, #202835 0%, #181f2a 100%);
+  border: 1.5px solid #2f3b4d;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.32),
+    0 1px 4px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.wii-card:hover {
+  border-color: #32b8f2;
+  box-shadow:
+    0 0 0 3px rgba(50, 184, 242, 0.22),
+    0 8px 22px rgba(0, 168, 232, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.dark .wii-card:hover {
+  border-color: #38bdf8;
+  box-shadow:
+    0 0 0 3px rgba(56, 189, 248, 0.22),
+    0 10px 26px rgba(0, 168, 232, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.wii-pill-btn {
+  background: linear-gradient(180deg, #ffffff 0%, #f3f6fa 55%, #e6ebf2 100%);
+  border: 1.5px solid #c7d0dc;
+  color: #424b57;
+  box-shadow:
+    0 3px 8px rgba(66, 82, 102, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .wii-pill-btn {
+  background: linear-gradient(180deg, #273140 0%, #1e2633 55%, #171e29 100%);
+  border: 1.5px solid #374559;
+  color: #dbe4f0;
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.wii-pill-btn:hover:not(:disabled) {
+  border-color: #32b8f2;
+  color: #0b5d87;
+  box-shadow:
+    0 0 0 3px rgba(50, 184, 242, 0.22),
+    0 6px 14px rgba(0, 168, 232, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.dark .wii-pill-btn:hover:not(:disabled) {
+  border-color: #38bdf8;
+  color: #7dd3fc;
+  box-shadow:
+    0 0 0 3px rgba(56, 189, 248, 0.22),
+    0 6px 16px rgba(0, 168, 232, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.wii-cyan-btn {
+  background: linear-gradient(180deg, #4ec9fa 0%, #1bb0ee 55%, #0095d9 100%);
+  border: 1.5px solid #0082c4;
+  color: #ffffff;
+  box-shadow:
+    0 4px 12px rgba(0, 168, 232, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .wii-cyan-btn {
+  background: linear-gradient(180deg, #38bdf8 0%, #0ea5e9 55%, #0284c7 100%);
+  border: 1.5px solid #38bdf8;
+  color: #ffffff;
+  box-shadow:
+    0 4px 14px rgba(14, 165, 233, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.wii-cyan-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #62d2fc 0%, #27b9f4 55%, #00a0e6 100%);
+  box-shadow:
+    0 0 0 3px rgba(50, 184, 242, 0.28),
+    0 6px 18px rgba(0, 168, 232, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
 /* Appearance Animations for Interactive Blocks */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -46,7 +202,7 @@
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.97) translateY(8px);
+    transform: scale(0.97) translateY(6px);
   }
   to {
     opacity: 1;
@@ -54,65 +210,12 @@
   }
 }
 
-@keyframes glowPulse {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.12);
-  }
-  50% {
-    box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
-  }
-}
-
 .animate-fade-in-up {
-  animation: fadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .animate-fade-in-scale {
-  animation: fadeInScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.glow-card {
-  transition: all 0.25s ease-out;
-}
-.glow-card:hover {
-  border-color: rgba(239, 68, 68, 0.6);
-  box-shadow: 0 0 25px rgba(239, 68, 68, 0.18);
-}
-
-/* Stagger Delays */
-.delay-50  { animation-delay: 50ms; }
-.delay-100 { animation-delay: 100ms; }
-.delay-150 { animation-delay: 150ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-250 { animation-delay: 250ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-350 { animation-delay: 350ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-450 { animation-delay: 450ms; }
-.delay-500 { animation-delay: 500ms; }
-
-/* Subtle Noir Detective HUD corner accents */
-.hud-corner {
-  position: relative;
-}
-.hud-corner::before, .hud-corner::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  pointer-events: none;
-}
-.hud-corner::before {
-  top: -1px;
-  left: -1px;
-  border-top: 1.5px solid rgba(239, 68, 68, 0.7);
-  border-left: 1.5px solid rgba(239, 68, 68, 0.7);
-}
-.hud-corner::after {
-  bottom: -1px;
-  right: -1px;
-  border-bottom: 1.5px solid rgba(239, 68, 68, 0.7);
-  border-right: 1.5px solid rgba(239, 68, 68, 0.7);
+  animation: fadeInScale 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* Hide scrollbar helper */
@@ -122,134 +225,4 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* Opening Detective Light Flickering & Revelation Animation */
-@keyframes detectiveLightReveal {
-  0% {
-    opacity: 1;
-    visibility: visible;
-  }
-  85% {
-    opacity: 0.8;
-  }
-  98% {
-    opacity: 0.05;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-@keyframes detectiveFlickerBeam {
-  0% {
-    background: radial-gradient(circle 240px at 46% 32%, rgba(255, 255, 255, 0.5) 0%, rgba(220, 38, 38, 0.28) 35%, rgba(0, 0, 0, 0.98) 75%, #000000 100%);
-    opacity: 0.85;
-  }
-  4% {
-    opacity: 0.25;
-  }
-  8% {
-    opacity: 0.9;
-    background: radial-gradient(circle 260px at 48% 34%, rgba(255, 255, 255, 0.55) 0%, rgba(220, 38, 38, 0.3) 38%, rgba(0, 0, 0, 0.98) 75%, #000000 100%);
-  }
-  12% {
-    opacity: 0.15;
-  }
-  16% {
-    opacity: 0.8;
-  }
-  22% {
-    opacity: 0.2;
-  }
-  26% {
-    opacity: 0.95;
-    background: radial-gradient(circle 340px at 50% 38%, rgba(255, 255, 255, 0.6) 0%, rgba(220, 38, 38, 0.28) 40%, rgba(0, 0, 0, 0.96) 78%, #000000 100%);
-  }
-  32% {
-    opacity: 0.35;
-  }
-  38% {
-    opacity: 0.85;
-  }
-  44% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.9;
-    background: radial-gradient(circle 460px at 50% 42%, rgba(255, 255, 255, 0.65) 0%, rgba(220, 38, 38, 0.22) 48%, rgba(0, 0, 0, 0.92) 80%, #000000 100%);
-  }
-  60% {
-    opacity: 0.55;
-  }
-  68% {
-    opacity: 0.95;
-    background: radial-gradient(circle 640px at 50% 45%, rgba(255, 255, 255, 0.65) 0%, rgba(220, 38, 38, 0.18) 55%, rgba(0, 0, 0, 0.85) 85%, #000000 100%);
-  }
-  78% {
-    opacity: 0.75;
-  }
-  86% {
-    opacity: 0.95;
-    background: radial-gradient(circle 980px at 50% 48%, rgba(255, 255, 255, 0.7) 0%, rgba(220, 38, 38, 0.12) 65%, rgba(0, 0, 0, 0.6) 90%, transparent 100%);
-  }
-  94% {
-    opacity: 0.35;
-  }
-  100% {
-    opacity: 0;
-    background: radial-gradient(circle 1600px at 50% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
-  }
-}
-
-@keyframes boardInitialReveal {
-  0% {
-    filter: brightness(0.28) contrast(140%);
-  }
-  8% {
-    filter: brightness(0.6) contrast(130%);
-  }
-  12% {
-    filter: brightness(0.25) contrast(145%);
-  }
-  16% {
-    filter: brightness(0.55) contrast(135%);
-  }
-  22% {
-    filter: brightness(0.3) contrast(140%);
-  }
-  26% {
-    filter: brightness(0.7) contrast(125%);
-  }
-  38% {
-    filter: brightness(0.5) contrast(130%);
-  }
-  50% {
-    filter: brightness(0.8) contrast(120%);
-  }
-  60% {
-    filter: brightness(0.65) contrast(125%);
-  }
-  68% {
-    filter: brightness(0.9) contrast(115%);
-  }
-  86% {
-    filter: brightness(0.98) contrast(105%);
-  }
-  100% {
-    filter: brightness(1) contrast(100%);
-  }
-}
-
-.animate-detective-light-reveal {
-  animation: detectiveLightReveal 3.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-.animate-detective-beam {
-  animation: detectiveFlickerBeam 3.2s ease-in-out forwards;
-}
-
-.animate-board-reveal {
-  animation: boardInitialReveal 3.2s ease-in-out forwards;
 }

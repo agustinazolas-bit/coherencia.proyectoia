@@ -8,6 +8,7 @@ interface SourcesColumnProps {
   totalSources: number;
   onOpenAllSources: () => void;
   onSelectSource: (source: VerifiedSource) => void;
+  onOpenScrapingMonitor?: () => void;
 }
 
 export const SourcesColumn: React.FC<SourcesColumnProps> = ({
@@ -15,6 +16,7 @@ export const SourcesColumn: React.FC<SourcesColumnProps> = ({
   totalSources,
   onOpenAllSources,
   onSelectSource,
+  onOpenScrapingMonitor,
 }) => {
   const handleSourceClick = (source: VerifiedSource) => {
     playPaperSlide();
@@ -24,6 +26,15 @@ export const SourcesColumn: React.FC<SourcesColumnProps> = ({
   const handleAllSourcesClick = () => {
     playPinClick();
     onOpenAllSources();
+  };
+
+  const handleScrapingClick = () => {
+    playPinClick();
+    if (onOpenScrapingMonitor) {
+      onOpenScrapingMonitor();
+    } else {
+      onOpenAllSources();
+    }
   };
   // Helper for confidence badge colors and labels - Red, White, and Black theme
   const getConfidenceStyle = (score: number = 95, isGoogle?: boolean) => {
@@ -66,110 +77,83 @@ export const SourcesColumn: React.FC<SourcesColumnProps> = ({
   return (
     <div 
       id="card-verified-sources"
-      className="bg-black/92 rounded-2xl border border-red-950 p-4 sm:p-5 shadow-2xl backdrop-blur-md flex flex-col justify-between h-full animate-fade-in-up delay-250 glow-card"
+      className="bg-[#202226] rounded-2xl border border-[#34373e] p-4 sm:p-5 shadow-lg flex flex-col justify-between h-full animate-fade-in-up delay-150"
     >
       <div>
-        {/* Card Header */}
-        <div className="border-b border-red-950 pb-3 mb-3.5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-widest text-red-400 flex items-center gap-1.5 font-mono">
-              <ShieldCheck className="w-4 h-4 text-red-400" />
-              <span>FUENTES VERIFICADAS</span>
-            </h2>
-            <span className="text-[10px] font-mono text-red-400/80 bg-neutral-950 border border-red-900/80 px-2 py-0.5 rounded">
-              11 mar – 19 jun
-            </span>
-          </div>
-          <p className="text-xs text-neutral-400 font-normal mt-0.5">
-            Vector de datos institucionales + Google Grounding en tiempo real
+        {/* Card Header matching reference image */}
+        <div className="border-b border-[#34373e]/70 pb-3 mb-3.5">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-1.5 font-sans">
+            <ShieldCheck className="w-4 h-4 text-blue-400" />
+            <span>FUENTES VERIFICADAS</span>
+          </h2>
+          <p className="text-xs text-neutral-400 font-normal mt-0.5 font-sans">
+            Vector de datos
           </p>
         </div>
 
-        {/* Sources List with Mobile Touch Targets >= 44px */}
+        {/* Sources List matching the reference image layout */}
         <div className="space-y-2.5">
           {sources.map((item) => {
-            const isGoogle = item.isGoogleSearchSource || item.verificationTier === 'GOOGLE_SEARCH_GROUNDING';
-            const score = item.confidenceScore ?? 95;
-            const style = getConfidenceStyle(score, isGoogle);
-            const statusText = item.verificationStatus || style.levelLabel;
+            const level = item.sourceHierarchyLevel ?? (item.verificationTier === 'GOOGLE_SEARCH_GROUNDING' ? 2 : 1);
+            const levelBadge = level === 1
+              ? { label: 'Nivel 1 · Primaria', cls: 'text-emerald-300 bg-emerald-950/60 border-emerald-500/40' }
+              : level === 2
+              ? { label: 'Nivel 2 · Secundaria', cls: 'text-blue-300 bg-blue-950/60 border-blue-500/40' }
+              : { label: 'Nivel 3 · Complementaria', cls: 'text-amber-300 bg-amber-950/60 border-amber-500/40' };
 
             return (
               <div
                 key={item.id}
                 id={`source-item-${item.id}`}
                 onClick={() => handleSourceClick(item)}
-                className="group cursor-pointer p-3 rounded-xl transition-all flex flex-col gap-2 shadow-xs border bg-neutral-950/70 hover:bg-neutral-900 border-red-950/80 hover:border-red-700 min-h-[44px] active:scale-[0.98]"
+                className="group cursor-pointer p-2.5 rounded-xl transition-all flex flex-col gap-1 border bg-[#26282e]/80 hover:bg-[#2d3037] border-[#383b43] hover:border-blue-500/50 min-h-[44px] active:scale-[0.98]"
               >
-                {/* Header row: Ref & Title + Confidence Badge */}
-                <div className="flex items-start justify-between gap-2">
+                {/* Header row: Ref & Title */}
+                <div className="flex items-center justify-between gap-2 min-w-0">
                   <div className="flex items-baseline gap-2 min-w-0">
-                    <span className="shrink-0 text-[11px] font-mono font-bold transition-colors text-red-400 group-hover:text-red-300">
+                    <span className="shrink-0 text-xs font-mono font-bold text-blue-400 group-hover:text-blue-300">
                       {item.refNumber}
                     </span>
-                    <p className="text-xs sm:text-sm font-bold text-white group-hover:text-red-300 transition-colors leading-snug truncate">
+                    <p className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors leading-snug truncate font-sans">
                       {item.name}
                     </p>
                   </div>
-
-                  {/* Visual Confidence Score Badge */}
-                  <div 
-                    id={`confidence-badge-${item.id}`}
-                    title={`Score de certeza oficial: ${score}% · ${statusText}`}
-                    className={`shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-mono font-bold ${style.badgeBg}`}
-                  >
-                    {isGoogle ? (
-                      <Globe className="w-2.5 h-2.5 text-red-400" />
-                    ) : (
-                      <span className={`w-1.5 h-1.5 rounded-full ${style.dotColor} animate-pulse`}></span>
-                    )}
-                    <span>{score}%</span>
-                  </div>
+                  <span className={`shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded border ${levelBadge.cls}`}>
+                    {levelBadge.label}
+                  </span>
                 </div>
 
                 {/* Source Detail */}
-                <p className="text-[11px] text-neutral-400 line-clamp-2 leading-relaxed">
+                <p className="text-[11px] text-neutral-400 line-clamp-1 leading-relaxed font-sans pl-6">
                   {item.detail}
                 </p>
-
-                {/* Visual Confidence Meter Bar & Verification Status Tag */}
-                <div className="pt-1 flex flex-col gap-1">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="text-neutral-400 font-mono flex items-center gap-1">
-                      {isGoogle ? (
-                        <Globe className="w-3 h-3 text-red-400" />
-                      ) : (
-                        <CheckCircle2 className="w-3 h-3 text-red-400" />
-                      )}
-                      <span className="text-neutral-300 font-medium truncate max-w-[170px] sm:max-w-[220px]">{statusText}</span>
-                    </span>
-                    <span className={`font-mono font-semibold ${style.textColor}`}>
-                      {score}/100
-                    </span>
-                  </div>
-
-                  {/* Micro Progress Bar */}
-                  <div className="w-full h-1 bg-black rounded-full overflow-hidden border border-red-950">
-                    <div 
-                      className={`h-full ${style.barFill} transition-all duration-500 rounded-full`}
-                      style={{ width: `${score}%` }}
-                    ></div>
-                  </div>
-                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Footer Link */}
-      <div className="pt-3.5 mt-4 border-t border-red-950">
+      {/* Footer Links: Scraping System & All Sources */}
+      <div className="pt-3.5 mt-4 border-t border-[#34373e]/70 space-y-2">
+        <button
+          type="button"
+          onClick={handleScrapingClick}
+          className="w-full min-h-[40px] py-2 px-3 rounded-xl bg-blue-950/40 hover:bg-blue-900/50 border border-blue-500/40 text-xs text-blue-300 hover:text-white font-bold flex items-center justify-between transition-all group cursor-pointer shadow-xs active:scale-95"
+        >
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Sistema de Scraping (9 Fuentes)</span>
+          </div>
+          <ArrowUpRight className="w-4 h-4 text-blue-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+        </button>
+
         <button
           id="btn-open-all-sources"
           onClick={handleAllSourcesClick}
-          className="w-full min-h-[44px] py-2 px-3 rounded-xl bg-neutral-950 hover:bg-neutral-900 text-xs text-neutral-300 hover:text-red-300 font-medium flex items-center justify-between transition-colors group cursor-pointer border border-red-950/70 hover:border-red-800"
+          className="w-full min-h-[38px] py-1.5 px-3 rounded-xl bg-[#26282e] hover:bg-[#2d3037] text-xs text-neutral-300 hover:text-white font-medium flex items-center justify-between transition-colors group cursor-pointer border border-[#383b43] hover:border-neutral-500 font-sans"
         >
-          <span>+ {totalSources - sources.length > 0 ? totalSources - sources.length : 38} fuentes adicionales indexadas</span>
-          <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-red-400" />
+          <span>+ {totalSources - sources.length > 0 ? totalSources - sources.length : 38} fuentes adicionales verificadas</span>
+          <span className="text-neutral-500 group-hover:text-neutral-300">›</span>
         </button>
       </div>
     </div>

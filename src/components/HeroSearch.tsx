@@ -1,34 +1,51 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Loader2, History, Trash2, X, RotateCcw, ArrowRight } from 'lucide-react';
+import { Search, Loader2, History, X, Sparkles, Filter, ArrowRight } from 'lucide-react';
 import { playPaperRustle, playPaperSlide, playPinClick } from '../utils/audio';
 
 interface HeroSearchProps {
   onSearch: (query: string) => void;
   isLoading: boolean;
   currentQuery: string;
+  selectedCategory?: string;
+  onSelectCategory?: (category: string) => void;
 }
 
 const STORAGE_KEY = 'coherencia_audit_history';
 const MAX_HISTORY = 5;
 
 const DEFAULT_HISTORY = [
-  "¿Es viable el plan de control fronterizo 2026?",
-  "Cotejar reforma tributaria con programas 2017 y 2021",
-  "Auditar reestructuración de ministerios y funcionarios"
+  "¿Qué promesas del Gobierno se han cumplido?",
+  "¿Cuánto dinero se ha destinado a esta política pública?",
+  "¿Es viable el plan de control fronterizo 2026?"
 ];
 
-const QUICK_SUGGESTIONS = [
-  { label: "Plan fronteras y FF.AA.", query: "¿Es viable el plan de control fronterizo 2026?" },
-  { label: "Reforma tributaria vs 2021", query: "Cotejar reforma tributaria con programas 2017 y 2021" },
-  { label: "Fusión de ministerios", query: "Auditar reestructuración de ministerios y funcionarios" }
+// Exact 4 examples requested by user specification
+const EXAMPLE_QUESTIONS = [
+  "¿Qué promesas del Gobierno se han cumplido?",
+  "¿Cuánto dinero se ha destinado a esta política pública?",
+  "¿Qué evidencia existe sobre esta medida?",
+  "¿Cómo ha cambiado este indicador durante el último año?"
+];
+
+// Thematic filters requested by user specification: economía, seguridad, educación, salud y gasto público
+const THEMATIC_FILTERS = [
+  { id: 'all', label: 'Todas las áreas', sample: '' },
+  { id: 'economia', label: 'Economía', sample: 'Auditoría a la reforma tributaria y gasto fiscal 2026' },
+  { id: 'seguridad', label: 'Seguridad', sample: 'Despliegue de FF.AA. y control de pasos fronterizos' },
+  { id: 'educacion', label: 'Educación', sample: 'Estado de la deuda histórica docente y voucher escolar' },
+  { id: 'salud', label: 'Salud', sample: 'Reducción de listas de espera GES y presupuesto hospitalario' },
+  { id: 'gasto', label: 'Gasto público', sample: 'Auditoría a transferencias fiscales y programas ministeriales' }
 ];
 
 export const HeroSearch: React.FC<HeroSearchProps> = ({
   onSearch,
   isLoading,
-  currentQuery
+  currentQuery,
+  selectedCategory = 'all',
+  onSelectCategory
 }) => {
   const [inputValue, setInputValue] = useState('');
+  const [activeFilter, setActiveFilter] = useState(selectedCategory);
   const [history, setHistory] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -81,18 +98,22 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
     }
   };
 
-  const handleSuggestionClick = (text: string) => {
+  const handleExampleClick = (question: string) => {
     playPaperSlide();
-    setInputValue(text);
-    saveQueryToHistory(text);
-    onSearch(text);
+    setInputValue(question);
+    saveQueryToHistory(question);
+    onSearch(question);
   };
 
-  const handleHistoryItemClick = (query: string) => {
-    playPaperSlide();
-    setInputValue(query);
-    saveQueryToHistory(query);
-    onSearch(query);
+  const handleFilterClick = (filterId: string, sample: string) => {
+    playPinClick();
+    setActiveFilter(filterId);
+    if (onSelectCategory) {
+      onSelectCategory(filterId);
+    }
+    if (sample && !inputValue.trim()) {
+      setInputValue(sample);
+    }
   };
 
   const handleClearHistory = (e: React.MouseEvent) => {
@@ -106,178 +127,162 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
     }
   };
 
-  const handleRemoveQuery = (e: React.MouseEvent, queryToRemove: string) => {
-    e.stopPropagation();
-    setHistory((prev) => {
-      const updated = prev.filter((q) => q !== queryToRemove);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch (err) {
-        console.warn('Error saving updated audit history:', err);
-      }
-      return updated;
-    });
-  };
-
   return (
-    <section className="w-full pt-6 sm:pt-10 pb-6 sm:pb-8 text-center px-2 sm:px-6 relative z-10 animate-fade-in-up">
-      <div className="max-w-3xl mx-auto">
+    <section className="w-full pt-6 sm:pt-10 pb-6 sm:pb-8 text-center px-3 sm:px-6 relative z-10 animate-fade-in-up">
+      <div className="max-w-3xl mx-auto space-y-4">
         
-        {/* Main Heading with Red, White & Black Typography */}
-        <div className="space-y-2 mb-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/90 border border-red-900/80 text-[11px] sm:text-xs text-neutral-200 shadow-sm font-mono animate-fade-in-scale">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-            <span className="text-red-400 font-semibold">11 Mar – 19 Jun 2026</span>
-            <span className="text-neutral-400">· 100 Días de Gobierno</span>
+        {/* Main Title & Description as requested */}
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/50 border border-blue-500/30 text-blue-300 text-xs font-medium mb-1">
+            <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+            <span>Auditoría Ciudadana y Fact-Checking</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight sm:tracking-tighter leading-tight sm:leading-[1.15] font-sans">
-            Auditoría gubernamental <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-rose-400 to-red-200">automatizada</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight font-sans">
+            ¿Qué quieres comprobar?
           </h1>
+          <p className="text-sm sm:text-base text-neutral-300 font-normal max-w-2xl mx-auto leading-relaxed">
+            Investiga promesas gubernamentales, políticas públicas y declaraciones mediante documentos y datos verificables.
+          </p>
         </div>
 
-        {/* Subtitle */}
-        <p className="text-xs sm:text-base text-neutral-300 font-normal max-w-2xl mx-auto leading-relaxed mb-4 sm:mb-5 px-2">
-          Unidad de verificación <strong className="text-red-400 font-semibold font-mono">EL AUDITOR</strong>: Fiscalización documental y prospectiva basada en Diario Oficial, DIPRES y programas 2017-2026.
-        </p>
-
-        {/* Local Query History Bar - Mobile optimized */}
-        <div className="mb-3 sm:mb-4 max-w-2xl mx-auto text-left">
-          {history.length > 0 ? (
-            <div className="bg-black/90 border border-red-950/90 rounded-2xl p-2.5 backdrop-blur-md shadow-xl transition-all">
-              <div className="flex items-center justify-between mb-2 px-1">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-200 font-mono">
-                  <History className="w-3.5 h-3.5 text-red-400" />
-                  <span>Historial de consultas</span>
-                  <span className="text-[10px] text-red-400 font-mono bg-neutral-950 px-1.5 py-0.5 rounded-full border border-red-900/80">
-                    {history.length}/{MAX_HISTORY}
-                  </span>
-                </div>
-                <button
-                  id="btn-clear-query-history"
-                  type="button"
-                  onClick={handleClearHistory}
-                  className="flex items-center gap-1 text-[11px] font-medium text-neutral-400 hover:text-red-400 transition-colors py-1 px-2 rounded-lg hover:bg-neutral-900 cursor-pointer"
-                  title="Borrar todas las consultas del historial local"
-                >
-                  <Trash2 className="w-3 h-3" />
-                  <span>Limpiar</span>
-                </button>
-              </div>
-
-              {/* Horizontal scrollable chips with touch optimization */}
-              <div 
-                id="query-history-chips-container"
-                className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 no-scrollbar scroll-smooth"
+        {/* Thematic Category Filter Chips */}
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap pt-1">
+          <span className="text-xs text-neutral-400 font-medium mr-1 flex items-center gap-1 hidden sm:inline-flex">
+            <Filter className="w-3.5 h-3.5 text-blue-400" />
+            <span>Filtrar por área:</span>
+          </span>
+          {THEMATIC_FILTERS.map((cat) => {
+            const isSelected = activeFilter === cat.id;
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => handleFilterClick(cat.id, cat.sample)}
+                className={`min-h-[36px] px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer active:scale-95 border ${
+                  isSelected
+                    ? 'bg-blue-600 text-white border-blue-500 shadow-sm font-semibold'
+                    : 'bg-[#202226] text-neutral-300 border-[#34373e] hover:border-neutral-500 hover:text-white'
+                }`}
+                title={`Filtrar consultas sobre ${cat.label}`}
               >
-                {history.map((queryText, idx) => (
-                  <div
-                    key={`${queryText}-${idx}`}
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => handleHistoryItemClick(queryText)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleHistoryItemClick(queryText);
-                      }
-                    }}
-                    className="group shrink-0 inline-flex items-center gap-1.5 px-3 py-2 min-h-[38px] rounded-xl bg-neutral-950 hover:bg-neutral-900 border border-red-950 hover:border-red-500/70 text-neutral-200 hover:text-red-300 text-xs transition-all shadow-xs cursor-pointer active:scale-95 select-none"
-                    title={`Re-ejecutar auditoría: "${queryText}"`}
-                  >
-                    <RotateCcw className="w-3 h-3 text-red-400 shrink-0 group-hover:rotate-[-45deg] transition-transform" />
-                    <span className="max-w-[170px] sm:max-w-[250px] md:max-w-[290px] truncate font-medium text-left">
-                      {queryText}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => handleRemoveQuery(e, queryText)}
-                      className="ml-1 p-1 rounded-full text-neutral-500 hover:text-red-400 hover:bg-neutral-800 transition-colors shrink-0"
-                      title="Eliminar del historial"
-                      aria-label={`Eliminar consulta ${queryText}`}
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : null}
+                {cat.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Search Bar Form */}
+        {/* Wide Natural Language Search Bar Form */}
         <form 
           id="audit-search-form"
           onSubmit={handleSubmit}
-          className="relative max-w-2xl mx-auto"
+          className="relative max-w-2xl mx-auto my-2"
         >
-          <div className="flex items-center bg-black/92 hover:bg-neutral-950 border border-red-900/80 hover:border-red-600 focus-within:border-red-500 focus-within:ring-2 focus-within:ring-red-500/30 rounded-2xl shadow-2xl backdrop-blur-md transition-all p-1.5 sm:p-2 pl-3 sm:pl-4">
+          <div className="flex items-center bg-[#202226] hover:bg-[#23252a] border border-[#353840] hover:border-[#4b4f5a] focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/25 rounded-xl shadow-xl transition-all p-1.5 pl-3.5 sm:pl-4">
+            <Search className="w-5 h-5 text-neutral-400 shrink-0 mr-2" />
             
-            <Search className="w-5 h-5 text-red-400 shrink-0 mr-2" />
-
             <input
               id="ai-query-input"
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Pregunta a EL AUDITOR (ej: ¿Es viable el plan fronterizo?)..."
+              placeholder="Formula una pregunta en lenguaje natural sobre una promesa o medida..."
               disabled={isLoading}
-              className="w-full bg-transparent text-base sm:text-base text-white placeholder-neutral-500 focus:outline-hidden py-2 pr-2 font-sans leading-normal"
+              className="w-full bg-transparent text-sm sm:text-base text-white placeholder-neutral-400 focus:outline-hidden py-2 pr-2 font-sans leading-normal"
             />
 
-            {/* Submit Button */}
+            {/* Clear Input button if typed */}
+            {inputValue && !isLoading && (
+              <button
+                type="button"
+                onClick={() => setInputValue('')}
+                className="p-1.5 text-neutral-400 hover:text-white mr-1 rounded-md transition-colors cursor-pointer"
+                aria-label="Borrar texto"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+
+            {/* Submit Button with clear label */}
             <button
               id="btn-submit-audit"
               type="submit"
               disabled={isLoading || !inputValue.trim()}
-              className={`min-h-[44px] px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all flex items-center justify-center gap-1.5 font-mono ${
+              className={`min-h-[44px] px-5 py-2 rounded-lg text-xs sm:text-sm font-sans font-bold tracking-wide transition-all flex items-center justify-center gap-2 shrink-0 ${
                 isLoading
-                  ? 'bg-neutral-900 text-neutral-500 cursor-not-allowed'
+                  ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed'
                   : inputValue.trim()
-                  ? 'bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/30 active:scale-95 cursor-pointer font-extrabold'
-                  : 'bg-neutral-950 text-neutral-500 hover:bg-neutral-900 hover:text-neutral-300'
+                  ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md active:scale-95 cursor-pointer'
+                  : 'bg-[#2b2d33] text-neutral-400 hover:bg-[#34373e]'
               }`}
-              aria-label="Enviar auditoría"
+              aria-label="Comprobar mediante auditoría"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span className="hidden sm:inline">AUDITANDO</span>
+                  <span className="hidden sm:inline">Comprobando...</span>
                 </>
               ) : (
                 <>
-                  <span>ENV</span>
-                  <ArrowRight className="w-3.5 h-3.5 hidden sm:inline" />
+                  <span>Comprobar</span>
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </>
               )}
             </button>
           </div>
         </form>
 
-        {/* Quick Suggestions Chips */}
-        <div className="mt-3.5 sm:mt-4 space-y-2.5">
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
-            <span className="text-neutral-400 text-[11px] font-mono mr-1">Sugerencias:</span>
-            {QUICK_SUGGESTIONS.map((sug, idx) => (
+        {/* 4 Natural Language Examples */}
+        <div className="space-y-1.5 max-w-2xl mx-auto pt-1">
+          <div className="text-xs text-neutral-400 font-medium text-center">
+            Ejemplos para comenzar:
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
+            {EXAMPLE_QUESTIONS.map((question, idx) => (
               <button
                 key={idx}
                 type="button"
-                onClick={() => handleSuggestionClick(sug.query)}
-                className="min-h-[34px] px-3 py-1.5 rounded-lg bg-neutral-950 hover:bg-neutral-900 text-neutral-300 hover:text-red-400 border border-red-950 hover:border-red-600 text-[11px] sm:text-xs transition-all active:scale-95 cursor-pointer font-sans"
+                onClick={() => handleExampleClick(question)}
+                className="p-2.5 rounded-lg bg-[#202226]/80 hover:bg-[#26282e] border border-[#34373e] hover:border-blue-500/50 text-xs text-neutral-300 hover:text-white transition-all cursor-pointer flex items-start gap-2 group text-left"
               >
-                {sug.label}
+                <span className="text-blue-400 font-bold shrink-0 mt-0.5">↳</span>
+                <span className="line-clamp-2 leading-relaxed group-hover:text-blue-200">
+                  {question}
+                </span>
               </button>
             ))}
           </div>
-
-          <div className="flex items-center justify-center gap-2 text-[10px] sm:text-[11px] text-neutral-400 font-mono">
-            <span className="inline-flex items-center gap-1 text-red-400 bg-red-950/70 border border-red-800/70 px-2 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-              Google Search Grounding
-            </span>
-            <span className="text-neutral-400 hidden sm:inline">Respaldo activo con Google Search en caso de requerir fuentes complementarias</span>
-          </div>
         </div>
+
+        {/* Local Query History Bar - clean, compact */}
+        {history.length > 0 && (
+          <div className="mt-3 max-w-2xl mx-auto flex items-center justify-between gap-2 overflow-x-auto py-1 px-1 text-left text-xs no-scrollbar">
+            <div className="flex items-center gap-1.5 shrink-0 text-neutral-400 font-sans text-[11px]">
+              <History className="w-3.5 h-3.5 text-blue-400" />
+              <span>Consultas previas:</span>
+            </div>
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+              {history.slice(0, 3).map((queryText, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleExampleClick(queryText)}
+                  className="shrink-0 px-2.5 py-1 rounded-lg bg-[#202226] hover:bg-[#282a30] border border-[#353840] text-neutral-300 hover:text-white text-[11px] truncate max-w-[220px] transition-colors cursor-pointer"
+                  title={queryText}
+                >
+                  {queryText}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={handleClearHistory}
+              className="text-[10px] text-neutral-500 hover:text-neutral-300 shrink-0 ml-auto transition-colors cursor-pointer"
+            >
+              Limpiar
+            </button>
+          </div>
+        )}
 
       </div>
     </section>

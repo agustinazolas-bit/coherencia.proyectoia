@@ -1,6 +1,6 @@
 {
-  "name": "COHERENCIA",
-  "description": "COHERENCIA · Unidad de verificación e inteligencia de datos EL AUDITOR para fiscalización de políticas públicas y balance de primeros 100 días de gobierno.",
+  "name": "COHERENC.IA",
+  "description": "COHERENC.IA · Unidad de verificación e inteligencia de datos EL AUDITOR para fiscalización de políticas públicas y balance de primeros 100 días de gobierno.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
